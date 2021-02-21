@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryDayColor">#e5e9e0</color>
+    <color name="primaryDayLightColor">#ffffff</color>
+    <color name="primaryDayDarkColor">#b3b7ae</color>
+    <color name="secondaryDayColor">#294c59</color>
+    <color name="secondaryDayLightColor">#557886</color>
+    <color name="secondaryDayDarkColor">#002430</color>
+    <color name="primaryDayTextColor">#000000</color>
+    <color name="secondaryDayTextColor">#ffffff</color>
+
+    <color name="primaryNightColor">#114059</color>
+    <color name="primaryNightLightColor">#436b86</color>
+    <color name="primaryNightDarkColor">#001a30</color>
+    <color name="secondaryNightColor">#d8dccc</color>
+    <color name="secondaryNightLightColor">#ffffff</color>
+    <color name="secondaryNightDarkColor">#a7aa9b</color>
+    <color name="primaryNightTextColor">#ffffff</color>
+    <color name="secondaryNightTextColor">#000000</color>
+</resources>
