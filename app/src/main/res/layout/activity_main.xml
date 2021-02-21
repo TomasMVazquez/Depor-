@@ -27,9 +27,4 @@
         app:cbn_fabElevation="4dp"
         app:cbn_elevation="6dp"
         />
-    <!--app:cbn_bg="@color/secondaryDayLightColor"
-        app:cbn_fabBg="@color/primaryDayDarkColor"
-        app:cbn_selectedColor="@color/primaryDayColor"
-        app:cbn_unSelectedColor="@color/secondaryDayDarkColor"-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

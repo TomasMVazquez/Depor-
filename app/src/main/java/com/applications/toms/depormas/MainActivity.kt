@@ -2,19 +2,24 @@ package com.applications.toms.depormas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.customviews.bottomnavigationview.CbnMenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //Navigation actions Bar
         val navController = this.findNavController(R.id.myNavHostFragment)
-        //NavigationUI.setupActionBarWithNavController(this, navController)
+        //To not show the back arrow in the fragments that are not hosting the nav
+//        NavigationUI.setupActionBarWithNavController(this, navController)
+
         val menuItems = arrayOf(
             CbnMenuItem(
                 R.drawable.ic_action_fav, // the icon
@@ -34,5 +39,29 @@ class MainActivity : AppCompatActivity() {
         )
         bottom_navigation_view.setMenuItems(menuItems, 1)
         bottom_navigation_view.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when (destination.id) {
+                R.id.configurationFragment -> hideBottomNav()
+                R.id.notificationsFragment -> hideBottomNav()
+                R.id.aboutUsFragment -> hideBottomNav()
+                else -> showBottomNav()
+            }
+        }
+    }
+
+    private fun showBottomNav() {
+        bottom_navigation_view.visibility = View.VISIBLE
+
+    }
+
+    private fun hideBottomNav() {
+        bottom_navigation_view.visibility = View.GONE
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.myNavHostFragment)
+        return navController.navigateUp()
     }
 }
