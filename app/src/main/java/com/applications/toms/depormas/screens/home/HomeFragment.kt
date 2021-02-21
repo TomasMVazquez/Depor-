@@ -1,13 +1,17 @@
 package com.applications.toms.depormas.screens.home
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
+
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +22,24 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_home, container, false)
+
+        //Menu
+        setHasOptionsMenu(true)
+
+
+        return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.toolbar_menu,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item, NavHostFragment.findNavController(this))
+                || super.onOptionsItemSelected(item)
     }
 
     companion object {
