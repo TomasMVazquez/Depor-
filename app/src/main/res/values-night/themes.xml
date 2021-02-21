@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DeporMas" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DeporMas" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primaryNightColor</item>
         <item name="colorPrimaryVariant">@color/primaryNightDarkColor</item>
@@ -13,4 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="CustomThemeBottomNav" parent="">
+        <item name="cbn_bg">@color/secondaryNightDarkColor</item>
+        <item name="cbn_fabBg">@color/primaryNightColor</item>
+        <item name="cbn_selectedColor">@color/secondaryNightColor</item>
+        <item name="cbn_unSelectedColor">@color/primaryNightDarkColor</item>
+    </style>
+
 </resources>
