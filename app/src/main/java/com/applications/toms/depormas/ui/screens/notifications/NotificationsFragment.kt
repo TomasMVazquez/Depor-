@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.screens.notifications
+package com.applications.toms.depormas.ui.screens.notifications
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,10 +15,10 @@ class NotificationsFragment : Fragment() {
     private lateinit var binding: FragmentNotificationsBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_notifications, container, false)
 

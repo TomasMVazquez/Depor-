@@ -10,11 +10,11 @@ fun Int.toPx(context: Context) = (this * context.resources.displayMetrics.densit
 
 fun Context.getColorRes(@ColorRes colorId: Int) = ContextCompat.getColor(this, colorId)
 
-
-fun setConstraintStatusBarMargin(context: Context,constraintLayout: ConstraintLayout) {
+fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintLayout) {
     val statusBarHeightId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
     val statusBarHeight = context.resources.getDimensionPixelSize(statusBarHeightId)
     val layoutParams = ConstraintLayout.LayoutParams(constraintLayout.layoutParams)
     layoutParams.topMargin = statusBarHeight
     constraintLayout.layoutParams = layoutParams
 }
+

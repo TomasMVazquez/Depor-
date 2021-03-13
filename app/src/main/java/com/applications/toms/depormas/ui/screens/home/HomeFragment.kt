@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.screens.create
+package com.applications.toms.depormas.ui.screens.home
 
 import android.os.Bundle
 import android.view.*
@@ -7,27 +7,25 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
-import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
+import com.applications.toms.depormas.databinding.FragmentHomeBinding
 
-class CreateEventFragment : Fragment() {
+class HomeFragment : Fragment() {
 
-    private lateinit var binding: FragmentCreateEventBinding
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_create_event, container, false)
+            inflater, R.layout.fragment_home, container, false)
 
-        //Menu
         setHasOptionsMenu(true)
-
 
         return binding.root
     }
@@ -42,8 +40,7 @@ class CreateEventFragment : Fragment() {
                 || super.onOptionsItemSelected(item)
     }
 
-
     companion object {
-        private const val TAG = "CreateEventFragment"
+        private const val TAG = "HomeFragment"
     }
 }

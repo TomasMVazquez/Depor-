@@ -1,7 +1,8 @@
-package com.applications.toms.depormas.customviews.bottomnavigationview
+package com.applications.toms.depormas.ui.customviews.bottomnavigationview
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import com.applications.toms.depormas.R
 
 data class CbnMenuItem(
     @DrawableRes

@@ -9,6 +9,8 @@
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
         <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <!--FONT FAMILy-->
+        <item name="fontFamily">@font/cherry_cream_soda</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
@@ -33,10 +35,10 @@
 
     //Style for bottom Navigation
     <style name="CustomThemeBottomNav" parent="">
-        <item name="cbn_bg">@color/secondaryNightDarkColor</item>
-        <item name="cbn_fabBg">@color/primaryNightColor</item>
-        <item name="cbn_selectedColor">@color/secondaryNightColor</item>
-        <item name="cbn_unSelectedColor">@color/primaryNightDarkColor</item>
+        <item name="cbn_bg">@color/secondaryDarkColor</item>
+        <item name="cbn_fabBg">@color/primaryColor</item>
+        <item name="cbn_selectedColor">@color/secondaryColor</item>
+        <item name="cbn_unSelectedColor">@color/primaryDarkColor</item>
     </style>
 
 </resources>

@@ -21,7 +21,6 @@
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/ThemeActionBar</item>
         <item name="windowActionBarOverlay">true</item>
-
     </style>
 
     //Transparent Action Bar
@@ -36,12 +35,10 @@
 
     //Style for bottom Navigation
     <style name="CustomThemeBottomNav" parent="">
-        <item name="cbn_bg">@color/secondaryDayLightColor</item>
-        <item name="cbn_fabBg">@color/primaryDayDarkColor</item>
-        <item name="cbn_selectedColor">@color/primaryDayColor</item>
-        <item name="cbn_unSelectedColor">@color/secondaryDayDarkColor</item>
+        <item name="cbn_bg">@color/secondaryLightColor</item>
+        <item name="cbn_fabBg">@color/primaryDarkColor</item>
+        <item name="cbn_selectedColor">@color/primaryColor</item>
+        <item name="cbn_unSelectedColor">@color/secondaryDarkColor</item>
     </style>
-
-
 
 </resources>
