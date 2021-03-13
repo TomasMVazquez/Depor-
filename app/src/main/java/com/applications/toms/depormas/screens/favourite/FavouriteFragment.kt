@@ -1,13 +1,17 @@
 package com.applications.toms.depormas.screens.favourite
 
 import android.os.Bundle
+import android.view.*
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.databinding.FragmentFavouriteBinding
 
 class FavouriteFragment : Fragment() {
+
+    private lateinit var binding: FragmentFavouriteBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +22,24 @@ class FavouriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favourite, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_favourite, container, false)
+
+        //Menu
+        setHasOptionsMenu(true)
+
+
+        return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.toolbar_menu,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item, NavHostFragment.findNavController(this))
+                || super.onOptionsItemSelected(item)
     }
 
     companion object {
