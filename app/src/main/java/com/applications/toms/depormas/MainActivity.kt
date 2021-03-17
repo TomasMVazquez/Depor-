@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.databinding.ActivityMainBinding
 import com.applications.toms.depormas.ui.customviews.bottomnavigationview.CbnMenuItem
 
@@ -37,7 +39,14 @@ class MainActivity : AppCompatActivity() {
 
         val navController = this.findNavController(R.id.myNavHostFragment)
         // To not show the back arrow in the fragments that are not hosting the nav
-        // NavigationUI.setupActionBarWithNavController(this, navController)
+        val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.homeFragment,
+                    R.id.favouriteFragment,
+                    R.id.createEventFragment
+                )
+        )
+        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration)
 
         with(binding.bottomNavigationView){
             setMenuItems(menuItems,1)

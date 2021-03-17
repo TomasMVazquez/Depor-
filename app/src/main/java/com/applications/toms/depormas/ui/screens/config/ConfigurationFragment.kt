@@ -9,10 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentConfigurationBinding
-import com.applications.toms.depormas.utils.getDarkMode
 import com.applications.toms.depormas.utils.setConstraintStatusBarMargin
+import com.google.android.material.appbar.AppBarLayout
 
 class ConfigurationFragment : Fragment() {
 
@@ -33,8 +34,8 @@ class ConfigurationFragment : Fragment() {
 
         setConstraintStatusBarMargin(requireContext(), binding.container)
 
-        viewModelConfig.darkMode.observe(viewLifecycleOwner, Observer { isDarkMode ->
-            if (isDarkMode != null) viewModelConfig.setSelectedMode()
+        viewModelConfig.darkMode.observe(viewLifecycleOwner, { isDarkMode ->
+            if (isDarkMode != null) viewModelConfig.updatedSelectedMode()
         })
 
         binding.goToAbout.setOnClickListener {

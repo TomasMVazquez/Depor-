@@ -9,7 +9,7 @@ import com.applications.toms.depormas.utils.getDarkMode
 class ViewModelAboutUs(application: Application): AndroidViewModel(application){
 
     private val _darkMode = MutableLiveData<Boolean>()
-    val darkMode: LiveData<Boolean> = _darkMode
+    val darkMode: LiveData<Boolean> get() = _darkMode
 
     init {
         _darkMode.value = getDarkMode(getApplication())

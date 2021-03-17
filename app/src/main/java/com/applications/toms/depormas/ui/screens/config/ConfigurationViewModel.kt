@@ -5,15 +5,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.applications.toms.depormas.utils.SharedPreferencesKeys
-import com.applications.toms.depormas.utils.getDarkMode
-import com.applications.toms.depormas.utils.getSharedPreferences
-import com.applications.toms.depormas.utils.updateDarkMode
+import com.applications.toms.depormas.utils.*
 
 class ConfigurationViewModel(application: Application): AndroidViewModel(application){
 
     private val _darkMode = MutableLiveData<Boolean>()
-    val darkMode: LiveData<Boolean> = _darkMode
+    val darkMode: LiveData<Boolean> get() = _darkMode
 
     init {
         _darkMode.value = getDeviceDarkModeState()
@@ -35,14 +32,10 @@ class ConfigurationViewModel(application: Application): AndroidViewModel(applica
         _darkMode.value = isChecked
     }
 
-    fun setSelectedMode(){
+    fun updatedSelectedMode(){
         darkMode.value?.let {
             updateDarkMode(getApplication(), it)
-            if (it) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+            setSelectedMode(getApplication())
         }
     }
 

@@ -26,6 +26,8 @@ class CreateEventFragment : Fragment() {
             inflater, R.layout.fragment_create_event, container, false)
 
         setHasOptionsMenu(true)
+
+
         return binding.root
     }
 

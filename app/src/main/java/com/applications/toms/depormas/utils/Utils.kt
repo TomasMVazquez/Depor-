@@ -1,14 +1,12 @@
 package com.applications.toms.depormas.utils
 
+import android.app.Application
 import android.content.Context
 import android.util.DisplayMetrics
 import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-
-fun Int.toPx(context: Context) = (this * context.resources.displayMetrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT
-
-fun Context.getColorRes(@ColorRes colorId: Int) = ContextCompat.getColor(this, colorId)
 
 fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintLayout) {
     val statusBarHeightId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -18,3 +16,12 @@ fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintL
     constraintLayout.layoutParams = layoutParams
 }
 
+fun setSelectedMode(application: Application){
+    if (getSharedPreferences(application).contains(SharedPreferencesKeys.DARK_MODE)) {
+        if (getDarkMode(application)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+}

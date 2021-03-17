@@ -17,28 +17,33 @@
         //Action Bar Transparent
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:actionBarStyle">@style/ThemeActionBar</item>
+        <item name="android:actionBarTheme">@style/ThemeActionBar</item>
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/ThemeActionBar</item>
+        <item name="actionBarTheme">@style/ThemeActionBar</item>
         <item name="windowActionBarOverlay">true</item>
     </style>
 
     //Transparent Action Bar
-    <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
+    <style name="ThemeActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
         //Hide Action Bar Title
         <item name="android:displayOptions">showHome</item>
         <item name="displayOptions">showHome</item>
         //Transparent Bkg
         <item name="android:background">@null</item>
         <item name="background">@null</item>
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/secondaryColor</item>
+        <item name="android:colorControlNormal" tools:ignore="NewApi">?colorControlNormal</item>
     </style>
 
     //Style for bottom Navigation
     <style name="CustomThemeBottomNav" parent="">
-        <item name="cbn_bg">@color/secondaryLightColor</item>
-        <item name="cbn_fabBg">@color/primaryDarkColor</item>
-        <item name="cbn_selectedColor">@color/primaryColor</item>
-        <item name="cbn_unSelectedColor">@color/secondaryDarkColor</item>
+        <item name="cbn_bg">@color/secondaryLightColor</item> // bkg Bottom nav
+        <item name="cbn_fabBg">@color/primaryLightColor</item> // bkg Fab
+        <item name="cbn_selectedColor">@color/secondaryLightColor</item> // bkg Icons
+        <item name="cbn_unSelectedColor">@color/primaryLightColor</item>
     </style>
 
 </resources>
