@@ -8,7 +8,15 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.applications.toms.depormas.ui.screens.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailEventFragment"
+            app:destination="@id/detailEventFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/createEventFragment"
         android:name="com.applications.toms.depormas.ui.screens.create.CreateEventFragment"
@@ -16,7 +24,15 @@
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="com.applications.toms.depormas.ui.screens.favourite.FavouriteFragment"
-        tools:layout="@layout/fragment_favourite" />
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_detailEventFragment"
+            app:destination="@id/detailEventFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/configurationFragment"
         android:name="com.applications.toms.depormas.ui.screens.config.ConfigurationFragment"
@@ -37,4 +53,8 @@
         android:id="@+id/aboutUsFragment"
         android:name="com.applications.toms.depormas.ui.screens.about.AboutUsFragment"
         tools:layout="@layout/fragment_about_us" />
+    <fragment
+        android:id="@+id/detailEventFragment"
+        android:name="com.applications.toms.depormas.ui.screens.detail.DetailEventFragment"
+        tools:layout="@layout/fragment_detail_event" />
 </navigation>
