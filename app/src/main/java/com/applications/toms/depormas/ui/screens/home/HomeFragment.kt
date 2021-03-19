@@ -9,6 +9,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
+import com.applications.toms.depormas.model.Sport
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -29,9 +31,10 @@ class HomeFragment : Fragment() {
 
         db.collection("sports")
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { result: QuerySnapshot ->
                 for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val sport = document.toObject(Sport::class.java)
+                    Log.d(TAG, "$sport")
                 }
             }
             .addOnFailureListener { exception ->
