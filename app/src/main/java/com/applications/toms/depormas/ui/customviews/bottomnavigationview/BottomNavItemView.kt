@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.customviews.bottomnavigationview
+package com.applications.toms.depormas.ui.customviews.bottomnavigationview
 
 import android.animation.*
 import android.content.Context
