@@ -36,4 +36,6 @@
     <string name="content_description_logo">Logo de DeporMas</string>
     <string name="content_description_sport_item">Imagen del deporte en el flitro</string>
     <string name="content_description_back_arrow">Imagen icono ir hacia atras</string>
+    <string name="firestore_collection_sport">sports</string>
+    <string name="database_table_sport">sport_table</string>
 </resources>

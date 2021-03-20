@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "960232976958",
+    "project_id": "depormas-2021",
+    "storage_bucket": "depormas-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960232976958:android:0ee7d7e50d3fe59ac5d76f",
+        "android_client_info": {
+          "package_name": "com.applications.toms.depormas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960232976958-ulvn188lek19ienqptd6n4vrcill7t6v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.applications.toms.depormas",
+            "certificate_hash": "68528757a6bdd69d734e4e2ae217664e4cdc4871"
+          }
+        },
+        {
+          "client_id": "960232976958-i4kf8tbb8mtsbrhc9brkb7u36vigbknn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0bpnm3-ktsXhSv21UXnGCLU3SKx4TFgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960232976958-i4kf8tbb8mtsbrhc9brkb7u36vigbknn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

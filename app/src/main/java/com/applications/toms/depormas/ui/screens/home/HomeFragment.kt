@@ -5,20 +5,26 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
-import com.applications.toms.depormas.model.Sport
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.applications.toms.depormas.data.repository.SportRepository
+import com.applications.toms.depormas.data.source.Network
+import com.applications.toms.depormas.data.source.database.RoomDataSource
+import com.applications.toms.depormas.data.source.database.SportDatabase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    val db = Firebase.firestore
+    private lateinit var homeViewModel: HomeViewModel
 
+    @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,17 +35,14 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        db.collection("sports")
-            .get()
-            .addOnSuccessListener { result: QuerySnapshot ->
-                for (document in result) {
-                    val sport = document.toObject(Sport::class.java)
-                    Log.d(TAG, "$sport")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
+        val sportRepository = SportRepository(RoomDataSource(requireContext()),Network())
+
+        homeViewModel = ViewModelProvider(this,HomeViewModelFactory(sportRepository))
+            .get(HomeViewModel::class.java)
+
+        homeViewModel.sports.observe(viewLifecycleOwner){
+            Log.d(TAG, "onCreateView: $it")
+        }
 
         return binding.root
     }
