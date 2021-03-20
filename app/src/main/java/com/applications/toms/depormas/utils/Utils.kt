@@ -16,9 +16,9 @@ fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintL
     constraintLayout.layoutParams = layoutParams
 }
 
-fun setSelectedMode(application: Application){
-    if (getSharedPreferences(application).contains(SharedPreferencesKeys.DARK_MODE)) {
-        if (getDarkMode(application)) {
+fun setSelectedMode(context: Context){
+    if (getSharedPreferences(context).contains(SharedPreferencesKeys.DARK_MODE)) {
+        if (getDarkMode(context)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

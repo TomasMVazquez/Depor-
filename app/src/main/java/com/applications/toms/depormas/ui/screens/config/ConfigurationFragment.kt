@@ -32,10 +32,12 @@ class ConfigurationFragment : Fragment() {
 
         binding.viewModelConfig = viewModelConfig
 
+        viewModelConfig.getDeviceDarkModeState(requireContext())
+
         setConstraintStatusBarMargin(requireContext(), binding.container)
 
         viewModelConfig.darkMode.observe(viewLifecycleOwner, { isDarkMode ->
-            if (isDarkMode != null) viewModelConfig.updatedSelectedMode()
+            if (isDarkMode != null) viewModelConfig.updatedSelectedMode(requireContext())
         })
 
         binding.goToAbout.setOnClickListener {

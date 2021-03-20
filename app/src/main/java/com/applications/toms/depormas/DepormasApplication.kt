@@ -9,6 +9,6 @@ class DepormasApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        setSelectedMode(this)
+        setSelectedMode(this.applicationContext)
     }
 }

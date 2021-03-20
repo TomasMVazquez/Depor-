@@ -1,30 +1,32 @@
 package com.applications.toms.depormas.ui.screens.config
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.applications.toms.depormas.utils.*
+import kotlin.coroutines.coroutineContext
 
-class ConfigurationViewModel(application: Application): AndroidViewModel(application){
+class ConfigurationViewModel: ViewModel(){
 
     private val _darkMode = MutableLiveData<Boolean>()
     val darkMode: LiveData<Boolean> get() = _darkMode
 
     init {
-        _darkMode.value = getDeviceDarkModeState()
+
     }
 
-    private fun getDeviceDarkModeState(): Boolean{
-        return if (!getSharedPreferences(getApplication()).contains(SharedPreferencesKeys.DARK_MODE)) {
+    fun getDeviceDarkModeState(context: Context) {
+        _darkMode.value = if (!getSharedPreferences(context).contains(SharedPreferencesKeys.DARK_MODE)) {
             when (AppCompatDelegate.getDefaultNightMode()) {
                 AppCompatDelegate.MODE_NIGHT_YES,
                 AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> true
                 else -> false
             }
         }else {
-            getDarkMode(getApplication())
+            getDarkMode(context)
         }
     }
 
@@ -32,10 +34,10 @@ class ConfigurationViewModel(application: Application): AndroidViewModel(applica
         _darkMode.value = isChecked
     }
 
-    fun updatedSelectedMode(){
+    fun updatedSelectedMode(context: Context){
         darkMode.value?.let {
-            updateDarkMode(getApplication(), it)
-            setSelectedMode(getApplication())
+            updateDarkMode(context, it)
+            setSelectedMode(context)
         }
     }
 

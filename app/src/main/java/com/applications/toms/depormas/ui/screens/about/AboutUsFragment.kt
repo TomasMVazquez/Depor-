@@ -31,6 +31,8 @@ class AboutUsFragment : Fragment() {
 
         binding.viewModelAbout = viewModelAbout
 
+        viewModelAbout.getDarkMode(getDarkMode(requireContext()))
+
         setConstraintStatusBarMargin(requireContext(), binding.container)
 
         binding.thanks.setAttributions(resources.getTextArray(R.array.attributions))
