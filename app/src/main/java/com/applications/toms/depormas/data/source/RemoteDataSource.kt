@@ -4,5 +4,5 @@ import com.applications.toms.depormas.data.model.Sport
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
-    suspend fun getSports(): List<Sport>
+    fun getSports(): Flow<List<Sport>>
 }

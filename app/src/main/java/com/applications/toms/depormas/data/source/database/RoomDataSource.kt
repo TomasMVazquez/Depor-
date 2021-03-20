@@ -12,10 +12,12 @@ class RoomDataSource(context: Context): LocalDataSource {
 
     override suspend fun isEmpty(): Boolean = sportDao.sportsCount() <= 0
 
-    override suspend fun saveSports(sports: List<Sport>) {
-        sportDao.insertAllSports(*sports.asDatabaseModel())
+    override fun saveSports(sports: Flow<List<Sport>>) {
+        sports.map { list->
+            sportDao.insertAllSports(*list.asDatabaseModel())
+        }
     }
 
-    override suspend fun getAllSports(): List<Sport> = sportDao.getAll().asDomainModel()
+    override fun getAllSports(): Flow<List<Sport>> = sportDao.getAll().map { sports -> sports.map{ it.asDomainModel() } }
 
 }

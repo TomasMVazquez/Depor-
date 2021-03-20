@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this,HomeViewModelFactory(sportRepository))
             .get(HomeViewModel::class.java)
 
-        homeViewModel.sports.observe(viewLifecycleOwner) {
+        homeViewModel.sports.observe(viewLifecycleOwner){
             Log.d(TAG, "onCreateView: $it")
         }
 

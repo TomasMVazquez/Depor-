@@ -20,7 +20,7 @@ class Network: RemoteDataSource {
 
     private val networkDatabase = Firebase.firestore
 
-    override suspend fun getSports(): List<Sport> {
+    /*override suspend fun getSports(): List<Sport> {
         return try {
             networkDatabase.collection("sports").get().await().documents.mapNotNull {
                 it.toObject(Sport::class.java)
@@ -29,9 +29,9 @@ class Network: RemoteDataSource {
             Log.e(TAG, "Error getting user friends", e)
             emptyList()
         }
-    }
+    }*/
 
-    fun getNetworkSports(): Flow<List<Sport>> {
+    override fun getSports(): Flow<List<Sport>> {
         return callbackFlow {
             val listenerRegistration = networkDatabase.collection("sports")
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
