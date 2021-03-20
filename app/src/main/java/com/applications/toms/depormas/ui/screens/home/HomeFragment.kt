@@ -35,8 +35,7 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val sportDatabase = SportDatabase.getInstance(requireContext())
-        val sportRepository = SportRepository(RoomDataSource(sportDatabase),Network())
+        val sportRepository = SportRepository(RoomDataSource(requireContext()),Network())
 
         homeViewModel = ViewModelProvider(this,HomeViewModelFactory(sportRepository))
             .get(HomeViewModel::class.java)

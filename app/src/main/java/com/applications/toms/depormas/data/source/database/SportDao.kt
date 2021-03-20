@@ -16,7 +16,7 @@ interface SportDao {
     suspend fun insertSport(sports: SportDbItem)
 
     @Query("SELECT * FROM sport_table ORDER BY id ASC")
-    fun getAll(): Flow<List<SportDbItem>>
+    fun getAll(): List<SportDbItem>
 
     @Query("SELECT COUNT(id) FROM sport_table")
     suspend fun sportsCount(): Int

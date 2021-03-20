@@ -17,3 +17,13 @@ fun SportDbItem.asDomainModel(): Sport {
     return Sport(id, name, img, max_players)
 }
 
+fun List<SportDbItem>.asDomainModel(): List<Sport>{
+    return map{
+        Sport(
+            id = it.id,
+            name = it.name,
+            img = it.img,
+            max_players = it.max_players
+        )
+    }
+}

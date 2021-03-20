@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.flow
 
 class SportRepository(private val localDataSource: LocalDataSource, private val remoteDataSource: RemoteDataSource) {
 
-    fun getSports(): Flow<List<Sport>> = flow<List<Sport>> {
+    suspend fun getSports(): List<Sport> {
         if(localDataSource.isEmpty()){
             val sports = remoteDataSource.getSports()
             localDataSource.saveSports(sports)
         }
-        localDataSource.getAllSports()
+        return localDataSource.getAllSports()
     }
 
     companion object{

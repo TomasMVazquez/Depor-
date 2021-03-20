@@ -1,6 +1,7 @@
 package com.applications.toms.depormas.data.source
 
 import android.util.Log
+import androidx.lifecycle.asLiveData
 import com.applications.toms.depormas.data.model.Sport
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -11,13 +12,26 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
+
 
 @ExperimentalCoroutinesApi
 class Network: RemoteDataSource {
 
     private val networkDatabase = Firebase.firestore
 
-    override fun getSports(): Flow<List<Sport>> {
+    override suspend fun getSports(): List<Sport> {
+        return try {
+            networkDatabase.collection("sports").get().await().documents.mapNotNull {
+                it.toObject(Sport::class.java)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting user friends", e)
+            emptyList()
+        }
+    }
+
+    fun getNetworkSports(): Flow<List<Sport>> {
         return callbackFlow {
             val listenerRegistration = networkDatabase.collection("sports")
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
