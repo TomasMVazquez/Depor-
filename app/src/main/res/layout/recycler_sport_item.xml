@@ -28,7 +28,7 @@
             android:id="@+id/sport_item"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:backgroundTint="@{sport.choosen ? @color/teal_200 : @color/secondaryColor}"
+            android:backgroundTint="@{sport.choosen ? @color/accentColor : @color/secondaryColor}"
             app:cardElevation="8dp"
             app:cardCornerRadius="150dp"
             android:layout_margin="8dp"
