@@ -4,7 +4,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.applications.toms.depormas.R
-import com.applications.toms.depormas.utils.getDarkMode
+import com.bumptech.glide.Glide
 
 @BindingAdapter("imageSrcDarkLight")
 fun bindImageDarkOrLight(imageView: ImageView,isDarkMode: Boolean){
