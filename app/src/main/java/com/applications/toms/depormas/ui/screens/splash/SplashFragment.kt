@@ -1,5 +1,6 @@
 package com.applications.toms.depormas.ui.screens.splash
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
+import com.applications.toms.depormas.MainActivity
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentSplashBinding
 import com.applications.toms.depormas.utils.onBoardingFinished
@@ -23,20 +26,25 @@ class SplashFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_splash,container,false)
 
-        if (onBoardingFinished(requireContext())) {
-            // TODO GO TO HOME
-        }else{
-            loadSplashScreen()
-        }
-
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (onBoardingFinished(requireContext())) {
+                goToMainActivity()
+            }else{
+                loadSplashScreen()
+            }
+        },TIME_OUT)
+        
         return binding.root
     }
 
+    private fun goToMainActivity() {
+        val intent = Intent(requireActivity(),MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
     private fun loadSplashScreen(){
-        Handler(Looper.getMainLooper()).postDelayed({
-            // You can declare your desire activity here to open after finishing splash screen. Like MainActivity
-            // TODO GO TO OnBoardingViewPager
-        },TIME_OUT)
+        findNavController().navigate(R.id.action_splashFragment_to_onboardingViewPagerFragment)
     }
 
     companion object {
