@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-            android:textColor="@color/secondaryColor"
+            android:textColor="@color/secondaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

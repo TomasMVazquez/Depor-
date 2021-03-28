@@ -19,6 +19,9 @@
     <string name="btn_next">Siguiente</string>
     <string name="btn_finish">Finalizar</string>
 
+    // Home
+    <string name="empty_state_text">No se encontraron eventos</string>
+
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
 
@@ -40,7 +43,6 @@
         <item name="attribute_itg_digital"><div>Illistraciones creadas por <a href="https://itg.digital/" title="ITG digital">ITG digital</a></div></item>
     </string-array>
 
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     // Content Descriptions
@@ -55,5 +57,6 @@
     <string name="content_description_onboarding_img_three">Imagen de dos personas conversando en un parque</string>
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
+    <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
 
 </resources>
