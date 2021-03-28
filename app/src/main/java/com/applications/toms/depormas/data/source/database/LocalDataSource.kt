@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
     suspend fun isEmpty():Boolean
-    fun saveSports(sports: Flow<List<Sport>>)
+    suspend fun saveSports(sports: List<Sport>)
     fun getAllSports(): Flow<List<Sport>>
 }

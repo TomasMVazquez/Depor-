@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
@@ -40,7 +41,7 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val sportRepository = SportRepository(RoomDataSource(requireContext()),Network())
+        val sportRepository = SportRepository(lifecycleScope,RoomDataSource(requireContext()),Network())
 
         homeViewModel = ViewModelProvider(this,HomeViewModelFactory(sportRepository))
             .get(HomeViewModel::class.java)
