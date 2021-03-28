@@ -9,6 +9,16 @@
     <string name="menu_setting_title">Configuraciones</string>
     <string name="menu_notifications_title">Notificaciones</string>
 
+    // Onboarding
+    <string name="onboarding_one_title">Crea un evento</string>
+    <string name="onboarding_two_title">Únete a un evento</string>
+    <string name="onboarding_three_title">Disfruta en compañía</string>
+    <string name="onboarding_one_msg">Elige un deporte, un día, un horario y publícalo</string>
+    <string name="onboarding_two_msg">Recorre los diferentes deportes y eventos cerca de tí. \n ¡Únete al que te guste!</string>
+    <string name="onboarding_three_msg">Disfruta de realizar un deporte en compañía de otros con tu misma pasión</string>
+    <string name="btn_next">Siguiente</string>
+    <string name="btn_finish">Finalizar</string>
+
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
 
@@ -40,4 +50,10 @@
     <string name="firestore_collection_sport">sports</string>
     <string name="database_table_sport">sport_table</string>
     <string name="content_description_splash_img">Imagen de mundo con fondo gris</string>
+    <string name="content_description_onboarding_img_one">Imagen de chica creando evento</string>
+    <string name="content_description_onboarding_img_two">Imagen de dispositivo celular con dos personas por delante</string>
+    <string name="content_description_onboarding_img_three">Imagen de dos personas conversando en un parque</string>
+    <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
+    <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
+
 </resources>

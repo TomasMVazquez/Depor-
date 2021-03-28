@@ -12,6 +12,7 @@ fun getSharedPreferences(context: Context): SharedPreferences{
 
 object SharedPreferencesKeys{
     const val DARK_MODE = "dark_mode"
+    const val ON_BOARDING = "onBoarding"
 }
 
 fun updateDarkMode(context: Context, value: Boolean){
@@ -20,4 +21,12 @@ fun updateDarkMode(context: Context, value: Boolean){
 
 fun getDarkMode(context: Context): Boolean{
     return getSharedPreferences(context).getBoolean(SharedPreferencesKeys.DARK_MODE,false)
+}
+
+fun onFinishOnBoarding(context: Context){
+    getSharedPreferences(context).edit{ putBoolean(SharedPreferencesKeys.ON_BOARDING,true) }
+}
+
+fun onBoardingFinished(context: Context): Boolean{
+    return getSharedPreferences(context).getBoolean(SharedPreferencesKeys.ON_BOARDING,false)
 }
