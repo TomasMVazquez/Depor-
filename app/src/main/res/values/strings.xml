@@ -21,6 +21,8 @@
 
     // Home
     <string name="empty_state_text">No se encontraron eventos</string>
+    <string name="dashboard_count_events">%d Eventos encontrados</string>
+    <string name="dashboard_text_sport">de %s</string>
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
@@ -40,6 +42,7 @@
         <item name="attribute_flaticon_vitaly"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/vitaly-gorbachev" title="Vitaly Gorbachev">Vitaly Gorbachev</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
         <item name="attribute_flaticon_thoseicons"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
         <item name="attribute_flaticon_goodware"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/good-ware" title="Good Ware">Good Ware</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
+        <item name="attribute_flaticon_becris"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/becris" title="Becris">Becris</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
         <item name="attribute_itg_digital"><div>Illistraciones creadas por <a href="https://itg.digital/" title="ITG digital">ITG digital</a></div></item>
     </string-array>
 
