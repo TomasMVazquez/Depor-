@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.data.model.Sport
 import com.bumptech.glide.Glide
 
 @BindingAdapter("imageSrcDarkLight")
