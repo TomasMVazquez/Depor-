@@ -23,6 +23,8 @@
         <item name="actionBarStyle">@style/ThemeActionBar</item>
         <item name="actionBarTheme">@style/ThemeActionBar</item>
         <item name="windowActionBarOverlay">true</item>
+
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
     </style>
 
     //Transparent Action Bar
@@ -44,6 +46,28 @@
         <item name="cbn_fabBg">@color/primaryLightColor</item> // bkg Fab
         <item name="cbn_selectedColor">@color/secondaryLightColor</item> // bkg Icons
         <item name="cbn_unSelectedColor">@color/primaryLightColor</item>
+    </style>
+
+    // Circular buttons
+    <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    // Input Layouts
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+        <item name="hintTextColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+        <item name="colorPrimary">@color/secondaryColor</item>
+        <item name="colorOnSurface">@color/greyColor</item>
+        <item name="colorError">@color/redColor</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
     </style>
 
 </resources>

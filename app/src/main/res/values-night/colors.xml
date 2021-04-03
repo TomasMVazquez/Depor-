@@ -18,4 +18,8 @@
     <color name="secondaryTextColor">#000000</color>
 
     <color name="accentColor">#FF018786</color>
+    <color name="greenColor">#00FF00</color>
+    <color name="redColor">#FF0000</color>
+    <color name="greyColor">#9E9D9D</color>
+
 </resources>
