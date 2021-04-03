@@ -24,6 +24,16 @@
     <string name="dashboard_count_events">%d Eventos encontrados</string>
     <string name="dashboard_text_sport">de %s</string>
 
+    // Create
+    <string name="create_hint_name">Nombre del evento</string>
+    <string name="create_hint_day">Día</string>
+    <string name="create_format_day">dd/mm/yyyy</string>
+    <string name="create_hint_time">Hora</string>
+    <string name="create_format_time">hh:mm</string>
+    <string name="create_hint_address">Dirección</string>
+    <string name="create_hint_participants">Cantidad de participantes</string>
+    <string name="create_format_participants">Dejar vacío en caso de ilimitado</string>
+
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
 
@@ -43,6 +53,7 @@
         <item name="attribute_flaticon_thoseicons"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
         <item name="attribute_flaticon_goodware"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/good-ware" title="Good Ware">Good Ware</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
         <item name="attribute_flaticon_becris"><div>Iconos diseñados por <a href="https://www.flaticon.es/autores/becris" title="Becris">Becris</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div></item>
+        <item name="attribute_flaticon_prosymbols"><div>Icons made by <a href="https://www.flaticon.com/authors/prosymbols" title="Prosymbols">Prosymbols</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div></item>
         <item name="attribute_itg_digital"><div>Illistraciones creadas por <a href="https://itg.digital/" title="ITG digital">ITG digital</a></div></item>
     </string-array>
 

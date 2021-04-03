@@ -16,6 +16,7 @@ import com.applications.toms.depormas.data.source.database.RoomDataSource
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
+import com.applications.toms.depormas.utils.getViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -42,8 +43,7 @@ class HomeFragment : Fragment() {
 
         val sportRepository = SportRepository(lifecycleScope,RoomDataSource(requireContext()),Network())
 
-        homeViewModel = ViewModelProvider(this,HomeViewModelFactory(sportRepository))
-            .get(HomeViewModel::class.java)
+        homeViewModel = getViewModel { HomeViewModel(sportRepository) }
 
         binding.homeViewModel = homeViewModel
 

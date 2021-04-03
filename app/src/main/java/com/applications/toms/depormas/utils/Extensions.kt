@@ -4,7 +4,11 @@ import android.content.Context
 import android.util.DisplayMetrics
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 fun Int.toPx(context: Context) = (this * context.resources.displayMetrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT
 
@@ -34,4 +38,13 @@ fun <T> MutableLiveData<MutableList<T>>.removeItemAt(index: Int) {
     } else {
         this.value = mutableListOf()
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T: ViewModel> Fragment.getViewModel(crossinline factory: () -> T): T {
+    val vmFactory = object: ViewModelProvider.Factory{
+        override fun <U : ViewModel?> create(modelClass: Class<U>): U = factory() as U
+    }
+
+    return ViewModelProvider(this,vmFactory).get(T::class.java)
 }
