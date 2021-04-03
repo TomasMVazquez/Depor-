@@ -1,9 +1,11 @@
 package com.applications.toms.depormas.ui.screens.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +18,8 @@ import com.applications.toms.depormas.data.source.database.RoomDataSource
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
+import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.Content
+import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.Loading
 import com.applications.toms.depormas.utils.getViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -59,7 +63,26 @@ class HomeFragment : Fragment() {
             }
         }
 
+        homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
+
         return binding.root
+    }
+
+    private fun updateUi(model: HomeViewModel.UiModel){
+        binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
+        when (model){
+            is Content -> {
+                Log.d(TAG, "updateUi: ${model.events}")
+                if (model.events.isEmpty()) {
+                    binding.emptyStateGroup.visibility = View.VISIBLE
+                    binding.eventsGroup.visibility = View.GONE
+                }else {
+                    binding.emptyStateGroup.visibility = View.GONE
+                    binding.eventsGroup.visibility = View.VISIBLE
+                }
+            }
+            else -> Log.d(TAG, "else")
+        }
     }
 
     private fun updateAdapter(sportChecked: Sport) {

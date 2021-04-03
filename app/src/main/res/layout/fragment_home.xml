@@ -31,18 +31,18 @@
             android:id="@+id/dashboardSport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:elevation="8dp"
             android:backgroundTint="@color/primaryLightColor"
+            android:elevation="8dp"
             app:cardCornerRadius="15dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sportRecycler">
+            app:layout_constraintTop_toBottomOf="@+id/sportRecycler"
+            app:strokeColor="@color/secondaryLightColor"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,13 +51,13 @@
 
                 <ImageView
                     android:id="@+id/dashboardImg"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/content_description_sport_item"
                     android:padding="8dp"
                     app:tint="@color/primaryDarkColor"
-                    android:contentDescription="@string/content_description_sport_item"
                     tools:srcCompat="@drawable/ic_running" />
 
                 <TextView
@@ -66,9 +66,9 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:text="@{@string/dashboard_count_events(0)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primaryDarkColor"
-                    android:text="@{@string/dashboard_count_events(0)}"
                     tools:text="15 Eventos" />
             </LinearLayout>
 
@@ -126,6 +126,18 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emptyStateImg" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/emptyStateGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="emptyStateImg,emptyStateMsg" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/eventsGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="dashboardSport,eventRecycler" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
