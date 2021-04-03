@@ -23,6 +23,8 @@
     <string name="empty_state_text">No se encontraron eventos</string>
     <string name="dashboard_count_events">%d Eventos encontrados</string>
     <string name="dashboard_text_sport">de %s</string>
+    <string name="item_participant">Participan: %s</string>
+    <string name="item_km_from_you">a %s KM de vos</string>
 
     // Create
     <string name="create_hint_name">Nombre del evento</string>

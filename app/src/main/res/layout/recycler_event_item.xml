@@ -48,35 +48,33 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="03/05/2021"
+                    android:text="@{event.getDateTime()}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@color/secondaryDarkColor" />
+                    android:textColor="@color/secondaryDarkColor"
+                    tools:text="25/05/2021 - 15:00hs"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="15:06 hs"
+                    android:text="@{event.location.address}"
+                    tools:text="Av. Corrientes 1561, Bs As Argentina"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/secondaryColor" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Av. Corrientes 1561, Bs As Argentina"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondaryColor" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="a 4.3 KM de vos"
+                    android:text="@{@string/item_km_from_you(event.participants)}"
+                    tools:text="a 4.3 KM de vos"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/secondaryLightColor" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Participan: 1"
+                    android:text="@{@string/item_participant(event.participants)}"
+                    tools:text="Participan: 1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/secondaryLightColor" />
 
