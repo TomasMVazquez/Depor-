@@ -21,4 +21,5 @@ data class Event(
 
     fun removeParticipant() = participants--
 
+    fun getDateTime(): String = "$date - ${time}hs"
 }

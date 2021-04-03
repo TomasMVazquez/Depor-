@@ -15,3 +15,8 @@ fun bindImageDarkOrLight(imageView: ImageView,isDarkMode: Boolean){
         imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, R.drawable.depormas_icon_colored_light_big))
     }
 }
+
+@BindingAdapter("sportImg")
+fun BindSportImage(imageView: ImageView,sport: Sport){
+    imageView.setImageResource(sport.getDrawableInt(imageView.context))
+}
