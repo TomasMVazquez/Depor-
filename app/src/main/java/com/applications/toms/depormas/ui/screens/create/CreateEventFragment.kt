@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -18,13 +17,13 @@ import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.utils.getViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
-class CreateEventFragment : Fragment() {
+class CreateEventFragment : Fragment(), BottomSheetInterface {
 
     private lateinit var binding: FragmentCreateEventBinding
     private lateinit var createViewModel: CreateViewModel
+
+    private val pickDayBottomSheet by lazy { BottomSheetPickDay(this) }
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
@@ -65,10 +64,20 @@ class CreateEventFragment : Fragment() {
 
         createViewModel.createEvent.observe(viewLifecycleOwner){
             it.getContentIfNotHandled()?.let {
+                //TODO HANDLE CREATE EVENT BTN
             }
         }
 
+        binding.eventDayTIET.setOnFocusChangeListener { _, b ->
+            if (b) showBottomSheetFragment()
+        }
+
+
         return binding.root
+    }
+
+    private fun showBottomSheetFragment() {
+        pickDayBottomSheet.show(requireActivity().supportFragmentManager, PICK_DAY_TAG)
     }
 
     private fun updateAdapter(sportChecked: Sport) {
@@ -93,7 +102,22 @@ class CreateEventFragment : Fragment() {
         return NavigationUI.onNavDestinationSelected(item, NavHostFragment.findNavController(this)) ||
                 super.onOptionsItemSelected(item)
     }
+
+    override fun getDataFromBottomSheet(code: Int, data: String) {
+        when(code){
+            PICK_DAY_CODE -> {
+                pickDayBottomSheet.dismiss()
+                binding.eventDayTIET.apply {
+                    setText(data)
+                    clearFocus()
+                }
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "CreateEventFragment"
+        private const val PICK_DAY_TAG = "BottomSheetPickDay"
+        const val PICK_DAY_CODE = 0
     }
 }

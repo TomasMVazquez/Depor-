@@ -1,6 +1,7 @@
 package com.applications.toms.depormas.ui.bindings
 
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.applications.toms.depormas.R
@@ -17,6 +18,6 @@ fun bindImageDarkOrLight(imageView: ImageView,isDarkMode: Boolean){
 }
 
 @BindingAdapter("sportImg")
-fun BindSportImage(imageView: ImageView,sport: Sport){
+fun bindSportImage(imageView: ImageView, sport: Sport){
     imageView.setImageResource(sport.getDrawableInt(imageView.context))
 }
