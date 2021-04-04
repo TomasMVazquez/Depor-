@@ -1,6 +1,7 @@
 package com.applications.toms.depormas.ui.screens.create
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -24,6 +25,7 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
     private lateinit var createViewModel: CreateViewModel
 
     private val pickDayBottomSheet by lazy { BottomSheetPickDay(this) }
+    private val pickTimeBottomSheet by lazy { BottomSheetPickTime(this) }
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
@@ -69,15 +71,22 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
         }
 
         binding.eventDayTIET.setOnFocusChangeListener { _, b ->
-            if (b) showBottomSheetFragment()
+            if (b) showDayPickerBottomSheetFragment()
         }
 
+        binding.eventTimeTIET.setOnFocusChangeListener { _, b ->
+            if (b) showTimePickerBottomSheetFragment()
+        }
 
         return binding.root
     }
 
-    private fun showBottomSheetFragment() {
+    private fun showDayPickerBottomSheetFragment() {
         pickDayBottomSheet.show(requireActivity().supportFragmentManager, PICK_DAY_TAG)
+    }
+
+    private fun showTimePickerBottomSheetFragment(){
+        pickTimeBottomSheet.show(requireActivity().supportFragmentManager, PICK_TIME_TAG)
     }
 
     private fun updateAdapter(sportChecked: Sport) {
@@ -112,12 +121,22 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
                     clearFocus()
                 }
             }
+            PICK_TIME_CODE -> {
+                Log.d(TAG, "getDataFromBottomSheet: $data")
+                pickTimeBottomSheet.dismiss()
+                binding.eventTimeTIET.apply {
+                    setText(data)
+                    clearFocus()
+                }
+            }
         }
     }
 
     companion object {
         private const val TAG = "CreateEventFragment"
         private const val PICK_DAY_TAG = "BottomSheetPickDay"
+        private const val PICK_TIME_TAG = "BottomSheetPickTime"
         const val PICK_DAY_CODE = 0
+        const val PICK_TIME_CODE = 1
     }
 }
