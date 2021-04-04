@@ -38,6 +38,7 @@
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
+    <string name="about_us">+ sobre nosotros</string>
 
     // Attributes
     <string name="title_attribution">Agradecimientos</string>
@@ -74,5 +75,6 @@
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
+    <string name="bottom_sheet_title_pick_day">Elige el día</string>
 
 </resources>

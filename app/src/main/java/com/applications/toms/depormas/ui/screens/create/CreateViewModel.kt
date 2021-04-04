@@ -35,5 +35,4 @@ class CreateViewModel(private val sportRepository: SportRepository): ViewModel()
     fun onCreateClicked(){
         _createEvent.value = EventWrapper(true)
     }
-
 }

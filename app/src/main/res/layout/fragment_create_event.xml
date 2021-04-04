@@ -144,7 +144,8 @@
                         android:drawableStart="@drawable/custom_input_icon_calendar"
                         android:drawablePadding="12dp"
                         android:imeOptions="actionNext"
-                        android:inputType="date" />
+                        android:inputType="date"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
