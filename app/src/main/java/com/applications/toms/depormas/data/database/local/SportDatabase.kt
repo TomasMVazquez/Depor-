@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.data.source.database
+package com.applications.toms.depormas.data.database.local
 
 import android.content.Context
 import androidx.room.Database
@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.applications.toms.depormas.R
 
-@Database(entities = [SportDbItem::class],version = 1,exportSchema = false)
+@Database(entities = [Sport::class],version = 1,exportSchema = false)
 abstract class SportDatabase: RoomDatabase() {
     abstract val sportDao: SportDao
 

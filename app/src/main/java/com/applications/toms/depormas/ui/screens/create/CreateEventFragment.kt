@@ -1,6 +1,8 @@
+
 package com.applications.toms.depormas.ui.screens.create
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -10,13 +12,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
-import com.applications.toms.depormas.data.model.Sport
+import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
-import com.applications.toms.depormas.data.source.Network
-import com.applications.toms.depormas.data.source.database.RoomDataSource
+import com.applications.toms.depormas.data.database.remote.Network
+import com.applications.toms.depormas.data.database.local.RoomDataSource
+import com.applications.toms.depormas.data.database.local.SportDatabase
 import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
+import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 
 class CreateEventFragment : Fragment(), BottomSheetInterface {
@@ -46,9 +50,11 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
 
         setHasOptionsMenu(true)
 
-        val sportRepository = SportRepository(lifecycleScope, RoomDataSource(requireContext()), Network())
+        val sportDatabase = SportDatabase.getInstance(requireContext())
+        val sportRepository = SportRepository(lifecycleScope, RoomDataSource(sportDatabase), Network())
+        val getSport = GetSports(sportRepository)
 
-        createViewModel = getViewModel { CreateViewModel(sportRepository) }
+        createViewModel = getViewModel { CreateViewModel(getSport) }
 
         binding.createViewModel = createViewModel
 
@@ -95,9 +101,9 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
         }
         sportChecked.choosen = !sportChecked.choosen
         if (sportChecked.choosen && sportChecked.max_players!! > 0) {
-            binding.eventParticipantsTIET.setText(sportChecked.max_players.toString())
+            binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable(sportChecked.max_players.toString())
         }else {
-            binding.eventParticipantsTIET.setText("")
+            binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable("")
         }
         sportAdapter.notifyDataSetChanged()
     }
@@ -121,8 +127,8 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
                     clearFocus()
                 }
             }
+
             PICK_TIME_CODE -> {
-                Log.d(TAG, "getDataFromBottomSheet: $data")
                 pickTimeBottomSheet.dismiss()
                 binding.eventTimeTIET.apply {
                     setText(data)

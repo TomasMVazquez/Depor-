@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.data.model
+package com.applications.toms.depormas.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

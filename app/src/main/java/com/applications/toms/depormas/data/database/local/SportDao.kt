@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.data.source.database
+package com.applications.toms.depormas.data.database.local
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 interface SportDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllSports(vararg sports: SportDbItem)
+    suspend fun insertAllSports(vararg sports: Sport)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSport(sports: SportDbItem)
+    suspend fun insertSport(sports: Sport)
 
     @Query("SELECT * FROM sport_table ORDER BY id ASC")
-    fun getAll(): Flow<List<SportDbItem>>
+    fun getAll(): Flow<List<Sport>>
 
     @Query("SELECT COUNT(id) FROM sport_table")
     suspend fun sportsCount(): Int

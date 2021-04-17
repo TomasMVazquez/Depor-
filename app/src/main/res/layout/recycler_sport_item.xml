@@ -6,7 +6,7 @@
     <data>
         <variable
             name="sport"
-            type="com.applications.toms.depormas.data.model.Sport" />
+            type="com.applications.toms.depormas.domain.Sport" />
         <variable
             name="clickListener"
             type="com.applications.toms.depormas.ui.adapters.SportListener" />

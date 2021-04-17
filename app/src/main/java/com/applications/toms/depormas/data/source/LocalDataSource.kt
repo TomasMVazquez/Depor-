@@ -1,6 +1,6 @@
-package com.applications.toms.depormas.data.source.database
+package com.applications.toms.depormas.data.source
 
-import com.applications.toms.depormas.data.model.Sport
+import com.applications.toms.depormas.domain.Sport
 import kotlinx.coroutines.flow.Flow
 
 

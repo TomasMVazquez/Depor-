@@ -4,18 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.applications.toms.depormas.data.model.Event
-import com.applications.toms.depormas.data.model.Sport
+import com.applications.toms.depormas.domain.Event
+import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
+import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-class HomeViewModel(private val sportRepository: SportRepository): ViewModel(), Scope by ImplementJob() {
+class HomeViewModel(private val getSports: GetSports): ViewModel(), Scope by ImplementJob() {
 
-    val sports = sportRepository.getSports().asLiveData()
+    val sports = getSports.invoke().asLiveData()
 
     private val allSports = Sport(-1,"","ic_all_sports",-1, false)
 

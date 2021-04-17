@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.applications.toms.depormas.data.model.Sport
+import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.databinding.RecyclerSportItemBinding
 
 class SportAdapter(private val clickListener: SportListener):

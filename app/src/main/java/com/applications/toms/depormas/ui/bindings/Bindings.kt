@@ -1,12 +1,10 @@
 package com.applications.toms.depormas.ui.bindings
 
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.applications.toms.depormas.R
-import com.applications.toms.depormas.data.model.Sport
-import com.bumptech.glide.Glide
+import com.applications.toms.depormas.domain.Sport
 
 @BindingAdapter("imageSrcDarkLight")
 fun bindImageDarkOrLight(imageView: ImageView,isDarkMode: Boolean){

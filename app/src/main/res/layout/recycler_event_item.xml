@@ -6,7 +6,7 @@
     <data>
         <variable
             name="event"
-            type="com.applications.toms.depormas.data.model.Event" />
+            type="com.applications.toms.depormas.domain.Event" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

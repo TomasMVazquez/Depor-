@@ -1,8 +1,8 @@
 package com.applications.toms.depormas.data.repository
 
-import com.applications.toms.depormas.data.model.Sport
+import com.applications.toms.depormas.data.source.LocalDataSource
 import com.applications.toms.depormas.data.source.RemoteDataSource
-import com.applications.toms.depormas.data.source.database.LocalDataSource
+import com.applications.toms.depormas.domain.Sport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -30,10 +30,4 @@ class SportRepository(
             }
         }
     }
-
-    companion object{
-        private const val TAG = "SportRepository"
-
-    }
-
 }
