@@ -1,10 +1,14 @@
 
 package com.applications.toms.depormas.ui.screens.create
 
+import android.Manifest
+import android.Manifest.permission
+import android.Manifest.permission.*
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +24,7 @@ import com.applications.toms.depormas.data.database.local.SportDatabase
 import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
+import com.applications.toms.depormas.ui.screens.home.HomeFragment
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 
@@ -34,6 +39,16 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
     }) }
+
+    private val fineLocationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
+        when{
+            granted -> Log.d(TAG, "granted") //TODO Add showMapBottomSheetFragment
+            shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> Log.d(TAG, "rational") //TODO rational
+            else -> Log.d(TAG, "denied")//TODO filter depending on permission granted/denied
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,12 +91,16 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
             }
         }
 
-        binding.eventDayTIET.setOnFocusChangeListener { _, b ->
-            if (b) showDayPickerBottomSheetFragment()
+        binding.eventDayTIET.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) showDayPickerBottomSheetFragment()
         }
 
-        binding.eventTimeTIET.setOnFocusChangeListener { _, b ->
-            if (b) showTimePickerBottomSheetFragment()
+        binding.eventTimeTIET.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) showTimePickerBottomSheetFragment()
+        }
+
+        binding.eventAddressTIET.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) fineLocationPermission.launch(ACCESS_FINE_LOCATION)
         }
 
         return binding.root
