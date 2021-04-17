@@ -6,6 +6,26 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 
+class SharedPreferences(context: Context){
+    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+    var darkMode: Boolean
+        get() = preferences.getBoolean(DARK_MODE,false)
+        set(value) = preferences.edit { putBoolean(DARK_MODE,value) }
+
+    var onBoarding: Boolean
+        get() = preferences.getBoolean(ON_BOARDING,false)
+        set(value) = preferences.edit { putBoolean(ON_BOARDING,value) }
+
+    fun isDarkModeSelected(): Boolean = preferences.contains(DARK_MODE)
+
+    companion object{
+        private const val DARK_MODE = "dark_mode"
+        private const val ON_BOARDING = "onBoarding"
+    }
+}
+/*
+
 fun getSharedPreferences(context: Context): SharedPreferences{
     return context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 }
@@ -29,4 +49,4 @@ fun onFinishOnBoarding(context: Context){
 
 fun onBoardingFinished(context: Context): Boolean{
     return getSharedPreferences(context).getBoolean(SharedPreferencesKeys.ON_BOARDING,false)
-}
+}*/

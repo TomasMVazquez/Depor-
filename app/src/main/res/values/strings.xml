@@ -9,6 +9,10 @@
     <string name="menu_setting_title">Configuraciones</string>
     <string name="menu_notifications_title">Notificaciones</string>
 
+    //Database
+    <string name="firestore_collection_sport">sports</string>
+    <string name="database_table_sport">sport_table</string>
+
     // Onboarding
     <string name="onboarding_one_title">Crea un evento</string>
     <string name="onboarding_two_title">Únete a un evento</string>
@@ -37,6 +41,7 @@
     <string name="create_format_participants">Dejar vacío en caso de ilimitado</string>
     <string name="bottom_sheet_title_pick_day">Elige el día</string>
     <string name="bottom_sheet_title_pick_time">Elige la hora</string>
+    <string name="bottom_sheet_btn_pick_time">Listo</string>
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
@@ -64,12 +69,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
     // Content Descriptions
     <string name="content_description_logo">Logo de DeporMas</string>
     <string name="content_description_sport_item">Imagen del deporte en el flitro</string>
     <string name="content_description_back_arrow">Imagen icono ir hacia atras</string>
-    <string name="firestore_collection_sport">sports</string>
-    <string name="database_table_sport">sport_table</string>
     <string name="content_description_splash_img">Imagen de mundo con fondo gris</string>
     <string name="content_description_onboarding_img_one">Imagen de chica creando evento</string>
     <string name="content_description_onboarding_img_two">Imagen de dispositivo celular con dos personas por delante</string>
@@ -77,6 +81,5 @@
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
-    <string name="bottom_sheet_btn_pick_time">Listo</string>
 
 </resources>

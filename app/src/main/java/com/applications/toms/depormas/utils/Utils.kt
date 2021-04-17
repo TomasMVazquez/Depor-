@@ -7,6 +7,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.applications.toms.depormas.preferences
 
 fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintLayout) {
     val statusBarHeightId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -16,11 +17,11 @@ fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintL
     constraintLayout.layoutParams = layoutParams
 }
 
-fun setSelectedMode(context: Context){
-    if (getSharedPreferences(context).contains(SharedPreferencesKeys.DARK_MODE)) {
-        if (getDarkMode(context)) {
+fun setSelectedMode(){
+    if (preferences.isDarkModeSelected()){
+        if (preferences.darkMode){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }else {
+        }else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }

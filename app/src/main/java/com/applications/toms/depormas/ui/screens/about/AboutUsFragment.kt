@@ -5,12 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentAboutUsBinding
-import com.applications.toms.depormas.utils.getDarkMode
+import com.applications.toms.depormas.preferences
 import com.applications.toms.depormas.utils.setConstraintStatusBarMargin
 
 class AboutUsFragment : Fragment() {
@@ -31,7 +30,7 @@ class AboutUsFragment : Fragment() {
 
         binding.viewModelAbout = viewModelAbout
 
-        viewModelAbout.getDarkMode(getDarkMode(requireContext()))
+        viewModelAbout.getDarkMode(preferences.darkMode)
 
         setConstraintStatusBarMargin(requireContext(), binding.container)
 

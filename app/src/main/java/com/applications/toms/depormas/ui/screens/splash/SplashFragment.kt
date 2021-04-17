@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.applications.toms.depormas.MainActivity
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentSplashBinding
-import com.applications.toms.depormas.utils.onBoardingFinished
+import com.applications.toms.depormas.preferences
 
 class SplashFragment : Fragment() {
 
@@ -27,7 +27,7 @@ class SplashFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_splash,container,false)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (onBoardingFinished(requireContext())) {
+            if (preferences.onBoarding) {
                 goToMainActivity()
             }else{
                 loadSplashScreen()

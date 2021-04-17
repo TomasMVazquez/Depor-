@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.databinding.ActivityMainBinding
 import com.applications.toms.depormas.ui.customviews.bottomnavigationview.CbnMenuItem
+import com.applications.toms.depormas.utils.setSelectedMode
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSelectedMode() // DARK MODE SELECTION
 
         val navController = this.findNavController(R.id.myNavHostFragment)
         // To not show the back arrow in the fragments that are not hosting the nav

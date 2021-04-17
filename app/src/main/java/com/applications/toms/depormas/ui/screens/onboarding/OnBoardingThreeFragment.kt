@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.applications.toms.depormas.MainActivity
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.FragmentOnboardingThreeBinding
-import com.applications.toms.depormas.utils.onFinishOnBoarding
+import com.applications.toms.depormas.preferences
 
 class OnBoardingThreeFragment : Fragment() {
 
@@ -38,7 +38,7 @@ class OnBoardingThreeFragment : Fragment() {
     }
 
     private fun onBoardingFinish(){
-        onFinishOnBoarding(requireContext())
+        preferences.onBoarding = true
     }
 
     companion object {
