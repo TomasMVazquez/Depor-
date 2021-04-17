@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.applications.toms.depormas.data.repository.SportRepository
+import com.applications.toms.depormas.ui.screens.home.HomeViewModel
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
+import kotlinx.coroutines.launch
 
 class CreateViewModel(private val getSports: GetSports): ViewModel(), Scope by Scope.ImplementJob(){
 
@@ -35,4 +36,5 @@ class CreateViewModel(private val getSports: GetSports): ViewModel(), Scope by S
     fun onCreateClicked(){
         _createEvent.value = EventWrapper(true)
     }
+
 }

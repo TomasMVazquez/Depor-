@@ -1,8 +1,10 @@
 package com.applications.toms.depormas.ui.screens.home
 
+import android.Manifest.permission.*
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -17,8 +19,8 @@ import com.applications.toms.depormas.data.database.local.SportDatabase
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
-import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.Content
-import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.Loading
+import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
+import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,6 +31,16 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
+    private val coarseLocationPermissionRequester =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
+            when{
+                granted -> homeViewModel.onCoarseLocationPermissionRequested()
+                shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION) -> Log.d(TAG, "rational") //TODO rational
+                else -> Log.d(TAG, "denied")//TODO filter depending on permission granted/denied
+            }
+
+        }
+
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
@@ -70,11 +82,10 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateUi(model: HomeViewModel.UiModel){
+    private fun updateUi(model: UiModel){
         binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
         when (model){
             is Content -> {
-                Log.d(TAG, "updateUi: ${model.events}")
                 if (model.events.isEmpty()) {
                     binding.emptyStateGroup.visibility = View.VISIBLE
                     binding.eventsGroup.visibility = View.GONE
@@ -83,7 +94,7 @@ class HomeFragment : Fragment() {
                     binding.eventsGroup.visibility = View.VISIBLE
                 }
             }
-            else -> Log.d(TAG, "else")
+            RequestLocationPermission -> coarseLocationPermissionRequester.launch(ACCESS_COARSE_LOCATION)
         }
     }
 

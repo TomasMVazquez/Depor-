@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Sport
-import com.applications.toms.depormas.data.repository.SportRepository
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
@@ -26,6 +25,7 @@ class HomeViewModel(private val getSports: GetSports): ViewModel(), Scope by Imp
     sealed class UiModel {
         object Loading: UiModel()
         class Content(val events: List<Event>): UiModel()
+        object RequestLocationPermission : UiModel()
     }
 
     private val _model = MutableLiveData<UiModel>()
@@ -41,6 +41,10 @@ class HomeViewModel(private val getSports: GetSports): ViewModel(), Scope by Imp
     }
 
     private fun refresh(){
+        _model.value = UiModel.RequestLocationPermission
+    }
+
+    fun onCoarseLocationPermissionRequested() {
         launch {
             _model.value = UiModel.Loading
             _model.value = UiModel.Content(emptyList())
