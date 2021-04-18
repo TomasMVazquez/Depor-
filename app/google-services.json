@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:960232976958:android:0ee7d7e50d3fe59ac5d76f",
+        "mobilesdk_app_id": "1:960232976958:android:600304eb4a35c1e7c5d76f",
         "android_client_info": {
-          "package_name": "com.applications.toms.depormas"
+          "package_name": "com.applications.toms.depormas.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "960232976958-ulvn188lek19ienqptd6n4vrcill7t6v.apps.googleusercontent.com",
+          "client_id": "960232976958-qq7g3pnt2vppfil45npr22j3eakqpttk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.applications.toms.depormas",
+            "package_name": "com.applications.toms.depormas.debug",
             "certificate_hash": "68528757a6bdd69d734e4e2ae217664e4cdc4871"
           }
         },

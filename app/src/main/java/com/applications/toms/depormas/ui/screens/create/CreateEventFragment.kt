@@ -1,8 +1,6 @@
 
 package com.applications.toms.depormas.ui.screens.create
 
-import android.Manifest
-import android.Manifest.permission
 import android.Manifest.permission.*
 import android.os.Bundle
 import android.text.Editable
@@ -16,15 +14,21 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.data.AndroidPermissionChecker
+import com.applications.toms.depormas.data.PlayServicesLocationDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
 import com.applications.toms.depormas.data.database.remote.Network
 import com.applications.toms.depormas.data.database.local.RoomDataSource
 import com.applications.toms.depormas.data.database.local.SportDatabase
+import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
-import com.applications.toms.depormas.ui.screens.home.HomeFragment
+import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetInterface
+import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetMap
+import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetPickDay
+import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetPickTime
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 
@@ -35,6 +39,13 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
 
     private val pickDayBottomSheet by lazy { BottomSheetPickDay(this) }
     private val pickTimeBottomSheet by lazy { BottomSheetPickTime(this) }
+    private val mapBottomSheet by lazy {
+        BottomSheetMap(
+            lifecycleScope,
+            LocationRepository(PlayServicesLocationDataSource(requireContext()),AndroidPermissionChecker(requireContext())),
+            this
+        )
+    }
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
@@ -43,9 +54,15 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
     private val fineLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
         when{
-            granted -> Log.d(TAG, "granted") //TODO Add showMapBottomSheetFragment
-            shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> Log.d(TAG, "rational") //TODO rational
-            else -> Log.d(TAG, "denied")//TODO filter depending on permission granted/denied
+            granted -> showMapBottomSheetFragment()
+            shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> {
+                showMapBottomSheetFragment()
+                Log.d(TAG, "rational") //TODO rational
+            }
+            else -> {
+                showMapBottomSheetFragment()
+                Log.d(TAG, "denied")//TODO filter depending on permission granted/denied
+            }
         }
 
     }
@@ -99,7 +116,7 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
             if (hasFocus) showTimePickerBottomSheetFragment()
         }
 
-        binding.eventAddressTIET.setOnFocusChangeListener { view, hasFocus ->
+        binding.eventAddressTIET.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) fineLocationPermission.launch(ACCESS_FINE_LOCATION)
         }
 
@@ -112,6 +129,10 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
 
     private fun showTimePickerBottomSheetFragment(){
         pickTimeBottomSheet.show(requireActivity().supportFragmentManager, PICK_TIME_TAG)
+    }
+
+    private fun showMapBottomSheetFragment(){
+        mapBottomSheet.show(requireActivity().supportFragmentManager,MAP_TAG)
     }
 
     private fun updateAdapter(sportChecked: Sport) {
@@ -154,6 +175,14 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
                     clearFocus()
                 }
             }
+
+            PICK_MAP_CODE -> {
+                mapBottomSheet.dismiss()
+                binding.eventAddressTIET.apply {
+                    setText(data)
+                    clearFocus()
+                }
+            }
         }
     }
 
@@ -161,7 +190,9 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
         private const val TAG = "CreateEventFragment"
         private const val PICK_DAY_TAG = "BottomSheetPickDay"
         private const val PICK_TIME_TAG = "BottomSheetPickTime"
+        private const val MAP_TAG = "BottomSheetMap"
         const val PICK_DAY_CODE = 0
         const val PICK_TIME_CODE = 1
+        const val PICK_MAP_CODE = 2
     }
 }

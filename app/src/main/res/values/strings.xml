@@ -41,7 +41,8 @@
     <string name="create_format_participants">Dejar vacío en caso de ilimitado</string>
     <string name="bottom_sheet_title_pick_day">Elige el día</string>
     <string name="bottom_sheet_title_pick_time">Elige la hora</string>
-    <string name="bottom_sheet_btn_pick_time">Listo</string>
+    <string name="bottom_sheet_btn_done">Listo</string>
+    <string name="dropped_pin">Punto de Encuentro</string>
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
@@ -81,5 +82,8 @@
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
+
+
+    <string name="google_maps_key">AIzaSyB5CkDwmRdiI81GS-HCZHjs8-N_ptYFkiE</string>
 
 </resources>
