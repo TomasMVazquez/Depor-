@@ -3,6 +3,7 @@ package com.applications.toms.depormas.utils
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -10,10 +11,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 
 fun Int.toPx(context: Context) = (this * context.resources.displayMetrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT
 
-fun Context.getColorRes(@ColorRes colorId: Int) = ContextCompat.getColor(this, colorId)
+fun View.snackBar(message: String, duration: Int = BaseTransientBottomBar.LENGTH_SHORT) {
+    Snackbar.make(this, message, duration).show()
+}
 
 fun <T> MutableLiveData<T>.notifyObserver() {
     this.value = this.value

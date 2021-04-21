@@ -1,13 +1,14 @@
 package com.applications.toms.depormas.data.database.local
 
+import com.applications.toms.depormas.data.database.local.sport.SportDatabase
 import com.applications.toms.depormas.data.toDatabaseModel
 import com.applications.toms.depormas.domain.Sport as DomainSport
-import com.applications.toms.depormas.data.source.LocalDataSource
+import com.applications.toms.depormas.data.source.sports.LocalSportDataSource
 import com.applications.toms.depormas.data.toDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class RoomDataSource(db: SportDatabase): LocalDataSource {
+class RoomSportDataSource(db: SportDatabase): LocalSportDataSource {
 
     private val sportDao = db.sportDao
 

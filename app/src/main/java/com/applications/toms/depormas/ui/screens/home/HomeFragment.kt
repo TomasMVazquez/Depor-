@@ -11,16 +11,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.data.database.local.RoomEventDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
-import com.applications.toms.depormas.data.database.remote.Network
-import com.applications.toms.depormas.data.database.local.RoomDataSource
-import com.applications.toms.depormas.data.database.local.SportDatabase
+import com.applications.toms.depormas.data.database.remote.SportFirestoreServer
+import com.applications.toms.depormas.data.database.local.RoomSportDataSource
+import com.applications.toms.depormas.data.database.local.event.EventDatabase
+import com.applications.toms.depormas.data.database.local.sport.SportDatabase
+import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
+import com.applications.toms.depormas.data.repository.EventRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
+import com.applications.toms.depormas.usecases.GetEvents
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +46,6 @@ class HomeFragment : Fragment() {
 
         }
 
-
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
     }) }
@@ -57,11 +61,23 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val sportDatabase = SportDatabase.getInstance(requireContext())
-        val sportRepository = SportRepository(lifecycleScope, RoomDataSource(sportDatabase), Network())
-        val getSport = GetSports(sportRepository)
+        val getSport = GetSports(
+                SportRepository(
+                        lifecycleScope,
+                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
+                        SportFirestoreServer()
+                )
+        )
 
-        homeViewModel = getViewModel { HomeViewModel(getSport) }
+        val getEvents = GetEvents(
+                EventRepository(
+                        lifecycleScope,
+                        RoomEventDataSource(EventDatabase.getInstance(requireContext())),
+                        EventFirestoreServer()
+                )
+        )
+
+        homeViewModel = getViewModel { HomeViewModel(getSport,getEvents) }
 
         binding.homeViewModel = homeViewModel
 
@@ -69,6 +85,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.sports.observe(viewLifecycleOwner){
             sportAdapter.submitList(it)
+        }
+
+        homeViewModel.events.observe(viewLifecycleOwner){
+            Log.d(TAG, "onCreateView: $it")
         }
 
         homeViewModel.selectedSport.observe(viewLifecycleOwner){

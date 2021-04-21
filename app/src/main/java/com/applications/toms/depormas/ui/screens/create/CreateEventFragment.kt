@@ -16,23 +16,27 @@ import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.AndroidPermissionChecker
 import com.applications.toms.depormas.data.PlayServicesLocationDataSource
+import com.applications.toms.depormas.data.database.local.RoomEventDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
-import com.applications.toms.depormas.data.database.remote.Network
-import com.applications.toms.depormas.data.database.local.RoomDataSource
-import com.applications.toms.depormas.data.database.local.SportDatabase
+import com.applications.toms.depormas.data.database.remote.SportFirestoreServer
+import com.applications.toms.depormas.data.database.local.RoomSportDataSource
+import com.applications.toms.depormas.data.database.local.event.EventDatabase
+import com.applications.toms.depormas.data.database.local.sport.SportDatabase
+import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
+import com.applications.toms.depormas.data.repository.EventRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
+import com.applications.toms.depormas.domain.Location
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
-import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetInterface
-import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetMap
-import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetPickDay
-import com.applications.toms.depormas.ui.screens.create.bottomsheets.BottomSheetPickTime
+import com.applications.toms.depormas.ui.screens.create.bottomsheets.*
 import com.applications.toms.depormas.usecases.GetSports
+import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.getViewModel
+import com.applications.toms.depormas.utils.snackBar
 
-class CreateEventFragment : Fragment(), BottomSheetInterface {
+class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInterface {
 
     private lateinit var binding: FragmentCreateEventBinding
     private lateinit var createViewModel: CreateViewModel
@@ -82,11 +86,22 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
 
         setHasOptionsMenu(true)
 
-        val sportDatabase = SportDatabase.getInstance(requireContext())
-        val sportRepository = SportRepository(lifecycleScope, RoomDataSource(sportDatabase), Network())
-        val getSport = GetSports(sportRepository)
+        val getSport = GetSports(
+            SportRepository(
+                    lifecycleScope,
+                    RoomSportDataSource(SportDatabase.getInstance(requireContext())),
+                    SportFirestoreServer()
+            )
+        )
+        val saveEvent = SaveEvent(
+            EventRepository(
+                    lifecycleScope,
+                    RoomEventDataSource(EventDatabase.getInstance(requireContext())),
+                    EventFirestoreServer()
+            )
+        )
 
-        createViewModel = getViewModel { CreateViewModel(getSport) }
+        createViewModel = getViewModel { CreateViewModel(getSport, saveEvent) }
 
         binding.createViewModel = createViewModel
 
@@ -96,18 +111,7 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
             sportAdapter.submitList(it)
         }
 
-        createViewModel.cancel.observe(viewLifecycleOwner){
-            it.getContentIfNotHandled()?.let {
-                findNavController().popBackStack()
-            }
-        }
-
-        createViewModel.createEvent.observe(viewLifecycleOwner){
-            it.getContentIfNotHandled()?.let {
-                //TODO HANDLE CREATE EVENT BTN
-            }
-        }
-
+        // On Focus Events
         binding.eventDayTIET.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) showDayPickerBottomSheetFragment()
         }
@@ -118,6 +122,37 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
 
         binding.eventAddressTIET.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) fineLocationPermission.launch(ACCESS_FINE_LOCATION)
+        }
+
+        //Click Events
+        createViewModel.cancel.observe(viewLifecycleOwner){
+            it.getContentIfNotHandled()?.let {
+                findNavController().popBackStack()
+            }
+        }
+
+        createViewModel.createEvent.observe(viewLifecycleOwner){
+            it.getContentIfNotHandled()?.let {
+                createViewModel.onEventValidation(
+                        binding.eventNameTIET.text.toString(),
+                        binding.eventDayTIET.text.toString(),
+                        binding.eventTimeTIET.text.toString(),
+                        binding.eventParticipantsTIET.text.toString()
+                )
+            }
+        }
+
+        // Results
+        createViewModel.createValidation.observe(viewLifecycleOwner){ event ->
+            event.getContentIfNotHandled()?.let {
+                when(it){
+                    0 -> binding.root.snackBar("No Sport selected")
+                    1 -> binding.root.snackBar("No Name selected")
+                    2 -> binding.root.snackBar("No Day selected")
+                    3 -> binding.root.snackBar("No Time selected")
+                    4 -> binding.root.snackBar("No Location selected")
+                }
+            }
         }
 
         return binding.root
@@ -140,10 +175,13 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
             if (sport.id != sportChecked.id && sport.choosen) sport.choosen = false
         }
         sportChecked.choosen = !sportChecked.choosen
-        if (sportChecked.choosen && sportChecked.max_players!! > 0) {
-            binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable(sportChecked.max_players.toString())
-        }else {
-            binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable("")
+        if (sportChecked.choosen) {
+            createViewModel.setEventSport(sportChecked)
+            if (sportChecked.max_players!! > 0) {
+                binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable(sportChecked.max_players.toString())
+            } else {
+                binding.eventParticipantsTIET.text = Editable.Factory.getInstance().newEditable("")
+            }
         }
         sportAdapter.notifyDataSetChanged()
     }
@@ -175,11 +213,16 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
                     clearFocus()
                 }
             }
+        }
+    }
 
+    override fun getDataFromMapBottomSheet(code: Int, data: Location) {
+        when(code){
             PICK_MAP_CODE -> {
                 mapBottomSheet.dismiss()
+                createViewModel.setEventLocation(data)
                 binding.eventAddressTIET.apply {
-                    setText(data)
+                    setText(data.address)
                     clearFocus()
                 }
             }
@@ -195,4 +238,5 @@ class CreateEventFragment : Fragment(), BottomSheetInterface {
         const val PICK_TIME_CODE = 1
         const val PICK_MAP_CODE = 2
     }
+
 }

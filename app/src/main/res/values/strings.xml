@@ -12,6 +12,7 @@
     //Database
     <string name="firestore_collection_sport">sports</string>
     <string name="database_table_sport">sport_table</string>
+    <string name="database_table_event">event_table</string>
 
     // Onboarding
     <string name="onboarding_one_title">Crea un evento</string>
@@ -82,8 +83,5 @@
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
-
-
-    <string name="google_maps_key">AIzaSyB5CkDwmRdiI81GS-HCZHjs8-N_ptYFkiE</string>
 
 </resources>
