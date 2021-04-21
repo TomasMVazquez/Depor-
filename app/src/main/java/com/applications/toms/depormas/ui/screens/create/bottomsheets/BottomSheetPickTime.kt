@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.ui.screens.create
+package com.applications.toms.depormas.ui.screens.create.bottomsheets
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.BottomSheetPickTimeBinding
+import com.applications.toms.depormas.ui.screens.create.CreateEventFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

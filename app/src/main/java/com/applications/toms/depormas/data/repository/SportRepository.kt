@@ -1,7 +1,7 @@
 package com.applications.toms.depormas.data.repository
 
-import com.applications.toms.depormas.data.source.LocalDataSource
-import com.applications.toms.depormas.data.source.RemoteDataSource
+import com.applications.toms.depormas.data.source.sports.LocalSportDataSource
+import com.applications.toms.depormas.data.source.sports.RemoteSportDataSource
 import com.applications.toms.depormas.domain.Sport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -9,8 +9,9 @@ import kotlinx.coroutines.launch
 
 class SportRepository(
         private val coroutineScope: CoroutineScope,
-        private val localDataSource: LocalDataSource,
-        private val remoteDataSource: RemoteDataSource) {
+        private val localDataSource: LocalSportDataSource,
+        private val remoteDataSource: RemoteSportDataSource
+) {
 
     fun getSports(): Flow<List<Sport>> {
         refreshSports()

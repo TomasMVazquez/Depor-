@@ -1,13 +1,13 @@
-package com.applications.toms.depormas.ui.screens.create
+package com.applications.toms.depormas.ui.screens.create.bottomsheets
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.BottomSheetPickDayBinding
+import com.applications.toms.depormas.ui.screens.create.CreateEventFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

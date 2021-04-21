@@ -12,6 +12,7 @@
     //Database
     <string name="firestore_collection_sport">sports</string>
     <string name="database_table_sport">sport_table</string>
+    <string name="database_table_event">event_table</string>
 
     // Onboarding
     <string name="onboarding_one_title">Crea un evento</string>
@@ -41,7 +42,8 @@
     <string name="create_format_participants">Dejar vacío en caso de ilimitado</string>
     <string name="bottom_sheet_title_pick_day">Elige el día</string>
     <string name="bottom_sheet_title_pick_time">Elige la hora</string>
-    <string name="bottom_sheet_btn_pick_time">Listo</string>
+    <string name="bottom_sheet_btn_done">Listo</string>
+    <string name="dropped_pin">Punto de Encuentro</string>
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>

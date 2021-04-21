@@ -1,7 +1,7 @@
-package com.applications.toms.depormas.data.source
+package com.applications.toms.depormas.data.source.sports
 
 import com.google.firebase.firestore.CollectionReference
 
-interface RemoteDataSource {
+interface RemoteSportDataSource {
     fun getSportsCollection(): CollectionReference
 }

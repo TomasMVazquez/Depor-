@@ -1,4 +1,4 @@
-package com.applications.toms.depormas.data.database.local
+package com.applications.toms.depormas.data.database.local.sport
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

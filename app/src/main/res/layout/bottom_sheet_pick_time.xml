@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/bottom_sheet_btn_pick_time"
+            android:text="@string/bottom_sheet_btn_done"
             android:textColor="@color/secondaryColor"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             app:rippleColor="@color/secondaryLightColor"

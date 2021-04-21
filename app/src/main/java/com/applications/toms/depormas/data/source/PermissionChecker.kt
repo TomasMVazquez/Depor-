@@ -4,5 +4,5 @@ interface PermissionChecker {
 
     enum class Permission { COARSE_LOCATION, FINE_LOCATION }
 
-    suspend fun check(permission: Permission): Boolean
+    fun check(permission: Permission): Boolean
 }
