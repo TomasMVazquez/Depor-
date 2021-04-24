@@ -13,7 +13,7 @@ interface EventDao {
     suspend fun insertEvent(events: Event)
 
     @Query("SELECT * FROM event_table ORDER BY created_date ASC")
-    fun getAll(): Flow<List<Event>>
+    fun getAll(): List<Event>
 
     @Query("SELECT COUNT(id) FROM event_table")
     suspend fun eventsCount(): Int

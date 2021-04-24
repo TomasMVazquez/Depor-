@@ -18,7 +18,7 @@ class HomeViewModel(
         ): ViewModel(), Scope by ImplementJob() {
 
     val sports = getSports.invoke().asLiveData()
-    val events = getEvents.invoke().asLiveData()
+    val events = getEvents.invoke()
 
     private val allSports = Sport(-1,"","ic_all_sports",-1, false)
 
@@ -27,7 +27,7 @@ class HomeViewModel(
 
     sealed class UiModel {
         object Loading: UiModel()
-        class Content(val events: LiveData<List<Event>>): UiModel()
+        class Content(val events: List<Event>): UiModel()
         object RequestLocationPermission : UiModel()
     }
 
@@ -66,9 +66,7 @@ class HomeViewModel(
     fun onFilterEventsBySportSelected(sport: Sport){
         launch {
             _model.value = UiModel.Loading
-            val filteredEvents = getEvents.invoke().asLiveData().map {
-                if (sport.id!! < 0) it else it.filterBySport(sport)
-            }
+            val filteredEvents = if(sport.id!! < 0) events else events.filterBySport(sport)
             _model.value = UiModel.Content(filteredEvents)
         }
     }

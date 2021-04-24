@@ -95,13 +95,10 @@ class HomeFragment : Fragment() {
             sportAdapter.submitList(it)
         }
 
-        homeViewModel.events.observe(viewLifecycleOwner){
-            eventAdapter.submitList(it)
-        }
-
         homeViewModel.selectedSport.observe(viewLifecycleOwner){
             if (it != null) {
                 binding.dashboardImg.setImageResource(it.getDrawableInt(binding.dashboardImg.context))
+                homeViewModel.onFilterEventsBySportSelected(it)
             }
         }
 
@@ -114,13 +111,13 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
         when (model){
             is Content -> {
-                if (model.events.value.isNullOrEmpty()) {
+                if (model.events.isNullOrEmpty()) {
                     eventAdapter.submitList(emptyList())
                     binding.emptyStateGroup.visibility = View.VISIBLE
                     binding.eventsGroup.visibility = View.GONE
                 } else {
-                    eventAdapter.submitList(model.events.value)
-                    binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), model.events.value!!.size);
+                    eventAdapter.submitList(model.events)
+                    binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), model.events.size);
                     binding.emptyStateGroup.visibility = View.GONE
                     binding.eventsGroup.visibility = View.VISIBLE
                 }

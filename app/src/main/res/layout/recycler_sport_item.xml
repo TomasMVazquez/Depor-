@@ -30,7 +30,7 @@
             android:layout_height="65dp"
             android:backgroundTint="@{sport.choosen ? @color/accentColor : @color/secondaryColor}"
             app:cardElevation="8dp"
-            app:cardCornerRadius="150dp"
+            app:cardCornerRadius="50dp"
             android:layout_margin="8dp"
             >
 
