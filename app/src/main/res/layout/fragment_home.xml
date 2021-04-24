@@ -131,12 +131,14 @@
             android:id="@+id/emptyStateGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:constraint_referenced_ids="emptyStateImg,emptyStateMsg" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/eventsGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:constraint_referenced_ids="dashboardSport,eventRecycler" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

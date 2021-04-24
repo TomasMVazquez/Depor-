@@ -7,7 +7,6 @@ import com.applications.toms.depormas.data.database.Converters
 import com.applications.toms.depormas.domain.Location
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.domain.Event as DomainEvent
-import java.sql.Timestamp
 import java.util.*
 
 @Entity(tableName = "event_table")
@@ -22,7 +21,7 @@ data class Event(
         val max_players: Int,
         val location: Location,
         val created_date: Date = Date(System.currentTimeMillis()),
-        var participants: Int = 0
+        var participants: Int = 1
 )
 
 fun Event.toDomainModel(): DomainEvent = DomainEvent(id, event_name, date, time, sport, max_players, location, created_date, participants)

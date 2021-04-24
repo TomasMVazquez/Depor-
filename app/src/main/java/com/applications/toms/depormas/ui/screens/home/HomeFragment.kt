@@ -4,6 +4,7 @@ import android.Manifest.permission.*
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -21,6 +22,8 @@ import com.applications.toms.depormas.data.database.local.sport.SportDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
+import com.applications.toms.depormas.ui.adapters.EventAdapter
+import com.applications.toms.depormas.ui.adapters.EventListener
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
@@ -48,6 +51,10 @@ class HomeFragment : Fragment() {
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
         updateAdapter(sport)
+    }) }
+
+    private val eventAdapter by lazy { EventAdapter(EventListener { event ->
+        Toast.makeText(requireContext(),"${event.event_name}",Toast.LENGTH_SHORT).show()
     }) }
 
     @InternalCoroutinesApi
@@ -82,13 +89,14 @@ class HomeFragment : Fragment() {
         binding.homeViewModel = homeViewModel
 
         binding.sportRecycler.adapter = sportAdapter
+        binding.eventRecycler.adapter = eventAdapter
 
         homeViewModel.sports.observe(viewLifecycleOwner){
             sportAdapter.submitList(it)
         }
 
         homeViewModel.events.observe(viewLifecycleOwner){
-            Log.d(TAG, "onCreateView: $it")
+            eventAdapter.submitList(it)
         }
 
         homeViewModel.selectedSport.observe(viewLifecycleOwner){
@@ -106,10 +114,13 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
         when (model){
             is Content -> {
-                if (model.events.isEmpty()) {
+                if (model.events.value.isNullOrEmpty()) {
+                    eventAdapter.submitList(emptyList())
                     binding.emptyStateGroup.visibility = View.VISIBLE
                     binding.eventsGroup.visibility = View.GONE
-                }else {
+                } else {
+                    eventAdapter.submitList(model.events.value)
+                    binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), model.events.value!!.size);
                     binding.emptyStateGroup.visibility = View.GONE
                     binding.eventsGroup.visibility = View.VISIBLE
                 }
