@@ -15,7 +15,7 @@ data class Event(
         val max_players: Int = 0,
         val location: Location = Location(),
         val created_date: Date = Date(System.currentTimeMillis()),
-        var participants: Int = 0
+        var participants: Int = 1
 ): Parcelable {
 
     fun addParticipant() = participants++
@@ -41,4 +41,8 @@ fun List<Event>.toDatabaseModel(): Array<EventDatabase> {
                 participants = it.participants
         )
     }.toTypedArray()
+}
+
+fun List<Event>.filterBySport(sport: Sport): List<Event> {
+    return filter { it.sport.id == sport.id }
 }

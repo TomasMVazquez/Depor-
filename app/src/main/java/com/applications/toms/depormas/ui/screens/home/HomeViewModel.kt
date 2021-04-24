@@ -1,11 +1,9 @@
 package com.applications.toms.depormas.ui.screens.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Sport
+import com.applications.toms.depormas.domain.filterBySport
 import com.applications.toms.depormas.usecases.GetEvents
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.Scope
@@ -20,7 +18,7 @@ class HomeViewModel(
         ): ViewModel(), Scope by ImplementJob() {
 
     val sports = getSports.invoke().asLiveData()
-    val events = getEvents.invoke().asLiveData()
+    val events = getEvents.invoke()
 
     private val allSports = Sport(-1,"","ic_all_sports",-1, false)
 
@@ -52,7 +50,7 @@ class HomeViewModel(
     fun onCoarseLocationPermissionRequested() {
         launch {
             _model.value = UiModel.Loading
-            _model.value = UiModel.Content(emptyList())
+            _model.value = UiModel.Content(events)
         }
     }
 
@@ -63,6 +61,14 @@ class HomeViewModel(
 
     fun onSelectSport(sportChecked: Sport?) {
         _selectedSport.value = sportChecked ?: allSports
+    }
+
+    fun onFilterEventsBySportSelected(sport: Sport){
+        launch {
+            _model.value = UiModel.Loading
+            val filteredEvents = if(sport.id!! < 0) events else events.filterBySport(sport)
+            _model.value = UiModel.Content(filteredEvents)
+        }
     }
 
 }

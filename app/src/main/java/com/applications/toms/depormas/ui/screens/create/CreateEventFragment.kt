@@ -146,6 +146,7 @@ class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInter
         createViewModel.createValidation.observe(viewLifecycleOwner){ event ->
             event.getContentIfNotHandled()?.let {
                 when(it){
+                    -1 -> findNavController().popBackStack()
                     0 -> binding.root.snackBar("No Sport selected")
                     1 -> binding.root.snackBar("No Name selected")
                     2 -> binding.root.snackBar("No Day selected")
