@@ -1,22 +1,32 @@
 package com.applications.toms.depormas.ui.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location.distanceBetween
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.applications.toms.depormas.R
 import com.applications.toms.depormas.databinding.RecyclerEventItemBinding
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Location
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.math.MathContext
+import kotlin.math.roundToLong
 
 
 class EventAdapter(private val clickListener: EventListener):
     ListAdapter<Event, EventAdapter.ViewHolder>(ClassDiffCallback()) {
+
+    var myLocation: Map<String, Double> = emptyMap()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -24,7 +34,7 @@ class EventAdapter(private val clickListener: EventListener):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item!!, clickListener)
+        holder.bind(item!!, clickListener, myLocation)
     }
 
     class ViewHolder private constructor(val binding: RecyclerEventItemBinding): RecyclerView.ViewHolder(binding.root), OnMapReadyCallback {
@@ -33,10 +43,10 @@ class EventAdapter(private val clickListener: EventListener):
         private lateinit var context: Context
         private lateinit var location: Location
 
-        fun bind(item: Event, clickListener: EventListener) {
+        fun bind(item: Event, clickListener: EventListener, myLocation:  Map<String, Double>) {
             context = itemView.context
             location = item.location
-
+            calculateDistanceFromMyLocation(myLocation)
             binding.clickListener = clickListener
             binding.event = item
             val mapView = binding.eventMap
@@ -46,15 +56,29 @@ class EventAdapter(private val clickListener: EventListener):
             binding.executePendingBindings()
         }
 
+        private fun calculateDistanceFromMyLocation(myLocation: Map<String, Double>) {
+            val results = FloatArray(1)
+            distanceBetween(
+                myLocation["latitude"] ?: 0.0,
+                myLocation["longitude"] ?: 0.0,
+                location.latitude,
+                location.longitude,
+                results
+            )
+            val distance = results[0].div(1000).toBigDecimal(MathContext(2))
+            binding.distance.text = String.format(context.getString(R.string.item_km_from_you),distance)
+        }
+
+        @SuppressLint("MissingPermission")
         override fun onMapReady(googleMap: GoogleMap) {
             MapsInitializer.initialize(context)
             map = googleMap
-            val position = LatLng(location.latitude,location.longitude)
+            val position = LatLng(location.latitude, location.longitude)
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 14f))
             map.addMarker(
-                MarkerOptions()
-                        .position(position)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    MarkerOptions()
+                            .position(position)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             )
         }
 

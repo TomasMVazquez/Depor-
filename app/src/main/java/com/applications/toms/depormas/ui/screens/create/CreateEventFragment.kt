@@ -31,6 +31,7 @@ import com.applications.toms.depormas.domain.Location
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.create.bottomsheets.*
+import com.applications.toms.depormas.usecases.GetMyLocation
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.getViewModel
@@ -46,7 +47,9 @@ class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInter
     private val mapBottomSheet by lazy {
         BottomSheetMap(
             lifecycleScope,
-            LocationRepository(PlayServicesLocationDataSource(requireContext()),AndroidPermissionChecker(requireContext())),
+            GetMyLocation(
+                LocationRepository(PlayServicesLocationDataSource(requireContext()),AndroidPermissionChecker(requireContext()))
+            ),
             this
         )
     }

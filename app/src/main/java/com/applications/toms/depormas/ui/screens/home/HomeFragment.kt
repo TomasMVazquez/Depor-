@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.data.AndroidPermissionChecker
+import com.applications.toms.depormas.data.PlayServicesLocationDataSource
 import com.applications.toms.depormas.data.database.local.RoomEventDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
@@ -21,6 +23,7 @@ import com.applications.toms.depormas.data.database.local.event.EventDatabase
 import com.applications.toms.depormas.data.database.local.sport.SportDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
+import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.EventAdapter
 import com.applications.toms.depormas.ui.adapters.EventListener
@@ -29,16 +32,20 @@ import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
 import com.applications.toms.depormas.usecases.GetEvents
+import com.applications.toms.depormas.usecases.GetMyLocation
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.getViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
+
     private val coarseLocationPermissionRequester =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
             when{
@@ -53,9 +60,13 @@ class HomeFragment : Fragment() {
         updateAdapter(sport)
     }) }
 
-    private val eventAdapter by lazy { EventAdapter(EventListener { event ->
-        Toast.makeText(requireContext(),"${event.event_name}",Toast.LENGTH_SHORT).show()
-    }) }
+    private val eventAdapter by lazy {
+        EventAdapter(
+                EventListener { event ->
+                    Toast.makeText(requireContext(),"${event.event_name}",Toast.LENGTH_SHORT).show()
+                }
+        )
+    }
 
     @InternalCoroutinesApi
     override fun onCreateView(
@@ -90,6 +101,16 @@ class HomeFragment : Fragment() {
 
         binding.sportRecycler.adapter = sportAdapter
         binding.eventRecycler.adapter = eventAdapter
+
+        lifecycleScope.launch {
+            eventAdapter.myLocation =  GetMyLocation(
+                    LocationRepository(
+                            PlayServicesLocationDataSource(requireContext()),
+                            AndroidPermissionChecker(requireContext())
+                    )
+            ).invoke()
+            eventAdapter.notifyDataSetChanged()
+        }
 
         homeViewModel.sports.observe(viewLifecycleOwner){
             sportAdapter.submitList(it)

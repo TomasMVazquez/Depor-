@@ -109,6 +109,7 @@
                         tools:text="Madrid" />
 
                     <TextView
+                        android:id="@+id/distance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{@string/item_km_from_you(0)}"

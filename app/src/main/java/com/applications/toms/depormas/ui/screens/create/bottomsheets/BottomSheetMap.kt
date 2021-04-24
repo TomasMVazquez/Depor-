@@ -19,6 +19,7 @@ import com.applications.toms.depormas.data.source.PermissionChecker.Permission
 import com.applications.toms.depormas.databinding.BottomSheetMapBinding
 import com.applications.toms.depormas.domain.Location
 import com.applications.toms.depormas.ui.screens.create.CreateEventFragment
+import com.applications.toms.depormas.usecases.GetMyLocation
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -34,7 +35,7 @@ import java.util.*
 
 class BottomSheetMap(
         private val coroutineScope: CoroutineScope,
-        private val locationRepository: LocationRepository,
+        private val getMyLocation: GetMyLocation,
         val listener: BottomSheetMapInterface)
     : BottomSheetDialogFragment(), OnMapReadyCallback {
 
@@ -95,7 +96,7 @@ class BottomSheetMap(
 
     private fun setLocation() {
         coroutineScope.launch {
-            val findLastLocation = locationRepository.findLastLocation()
+            val findLastLocation = getMyLocation.invoke()
             val latitude = findLastLocation["latitude"]!!
             val longitude = findLastLocation["longitude"]!!
             val location = LatLng(latitude, longitude)
