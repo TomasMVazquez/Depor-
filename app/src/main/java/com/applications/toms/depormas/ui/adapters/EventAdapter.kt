@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.math.MathContext
+import java.math.RoundingMode
 import kotlin.math.roundToLong
 
 
@@ -65,7 +66,7 @@ class EventAdapter(private val clickListener: EventListener):
                 location.longitude,
                 results
             )
-            val distance = results[0].div(1000).toBigDecimal(MathContext(2))
+            val distance = results[0].div(1000).toBigDecimal().setScale(2, RoundingMode.HALF_EVEN)
             binding.distance.text = String.format(context.getString(R.string.item_km_from_you),distance)
         }
 
