@@ -20,32 +20,6 @@ fun View.snackBar(message: String, duration: Int = BaseTransientBottomBar.LENGTH
     Snackbar.make(this, message, duration).show()
 }
 
-fun <T> MutableLiveData<T>.notifyObserver() {
-    this.value = this.value
-}
-
-fun <T> MutableLiveData<MutableList<T>>.addNewItem(item: T) {
-    val oldValue = this.value ?: mutableListOf()
-    oldValue.add(item)
-    this.value = oldValue
-}
-
-fun <T> MutableLiveData<MutableList<T>>.addNewItemAt(index: Int, item: T) {
-    val oldValue = this.value ?: mutableListOf()
-    oldValue.add(index, item)
-    this.value = oldValue
-}
-
-fun <T> MutableLiveData<MutableList<T>>.removeItemAt(index: Int) {
-    if (!this.value.isNullOrEmpty()) {
-        val oldValue = this.value
-        oldValue?.removeAt(index)
-        this.value = oldValue
-    } else {
-        this.value = mutableListOf()
-    }
-}
-
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T: ViewModel> Fragment.getViewModel(crossinline factory: () -> T): T {
     val vmFactory = object: ViewModelProvider.Factory{

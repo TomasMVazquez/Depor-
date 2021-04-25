@@ -8,15 +8,31 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:background="@color/primaryColor"
-       android:paddingTop="?actionBarSize">
+       android:paddingTop="?actionBarSize"
+       android:paddingBottom="?actionBarSize"
+       >
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/favoritesRecycler"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginEnd="16dp"
+          android:orientation="vertical"
+          android:visibility="gone"
+          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
 
       <ProgressBar
           android:id="@+id/progressBar"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          app:layout_constraintBottom_toBottomOf="parent"
+          android:layout_marginTop="32dp"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.5"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,11 +40,9 @@
           android:id="@+id/emptyStateImg"
           android:layout_width="250dp"
           android:layout_height="250dp"
-          android:layout_marginTop="16dp"
+          android:layout_marginTop="32dp"
           android:contentDescription="@string/content_description_empty_state"
-          app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.5"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           app:srcCompat="@drawable/empty_state"
@@ -49,6 +63,13 @@
           app:layout_constraintHorizontal_bias="0.5"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/emptyStateImg" />
+
+      <androidx.constraintlayout.widget.Group
+          android:id="@+id/emptyState"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:visibility="gone"
+          app:constraint_referenced_ids="emptyStateImg,emptyStateMsg" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -81,7 +81,7 @@ class CreateViewModel(private val getSports: GetSports, private val saveEvent: S
                             time = time,
                             sport = _eventSport.value!!,
                             location = _eventLocation.value!!,
-                            max_players = participants?.toInt()!!,
+                            max_players = if (!participants.isNullOrBlank()) participants.toInt() else -1,
                     )
             )
         }

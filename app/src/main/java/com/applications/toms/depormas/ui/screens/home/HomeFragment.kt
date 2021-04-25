@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
     private val eventAdapter by lazy {
         EventAdapter(
                 EventListener { event ->
-                    Toast.makeText(requireContext(),"${event.event_name}",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), event.event_name,Toast.LENGTH_SHORT).show()
                 }
         )
     }

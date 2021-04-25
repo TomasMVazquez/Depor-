@@ -33,7 +33,7 @@ class EventRepository(
         }
     }
 
-    fun saveEvent(event: Event){
+    fun saveEvent(event: Event): String{
         val id = remoteDataSource.getEventsCollection().document().id
         remoteDataSource.getEventsCollection().document(id).set(
                 Event(
@@ -49,6 +49,7 @@ class EventRepository(
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) refreshEvents()
         }
+        return id
     }
 
     fun updateEvent(event: Event){

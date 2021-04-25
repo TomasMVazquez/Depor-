@@ -7,14 +7,21 @@
         <variable
             name="event"
             type="com.applications.toms.depormas.domain.Event" />
+        <variable
+            name="clickListener"
+            type="com.applications.toms.depormas.ui.adapters.FavoriteListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/secondaryColor"
         app:cardCornerRadius="17dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:checkable="true"
+        android:onClick="@{()-> clickListener.onClick(event)}"
         >
 
         <LinearLayout
@@ -35,7 +42,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
                     android:layout_weight="20"
-                    app:tint="@color/greyColor"
+                    app:tint="@color/primaryColor"
                     sportImg="@{event.sport}"
                     tools:srcCompat="@drawable/ic_running"
                     android:contentDescription="@string/content_description_sport_item" />
@@ -44,9 +51,9 @@
                     android:layout_width="0dp"
                     android:layout_weight="80"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/greyColor"
+                    android:textColor="@color/primaryColor"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:text="@{event.sport.name}"
+                    android:text="@{event.sport.name.toUpperCase()}"
                     tools:text="Running" />
             </LinearLayout>
 
@@ -65,11 +72,11 @@
                     android:orientation="horizontal"
                     android:weightSum="100">
 
-                    <ImageView
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/eventMap"
                         android:layout_width="0dp"
                         android:layout_weight="30"
-                        android:layout_height="match_parent"
-                        tools:srcCompat="@tools:sample/avatars[2]" />
+                        android:layout_height="match_parent"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
