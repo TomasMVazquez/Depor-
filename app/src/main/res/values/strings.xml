@@ -85,5 +85,6 @@
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
     <string name="favorite_saved_msg">Evento guardado en favoritos</string>
+    <string name="favorite_already_saved">Evento ya se encuentra en tus favoritos</string>
 
 </resources>

@@ -40,10 +40,7 @@ import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
-import com.applications.toms.depormas.usecases.GetEvents
-import com.applications.toms.depormas.usecases.GetMyLocation
-import com.applications.toms.depormas.usecases.GetSports
-import com.applications.toms.depormas.usecases.SaveFavorite
+import com.applications.toms.depormas.usecases.*
 import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -149,15 +146,17 @@ class HomeFragment : Fragment() {
                 )
         )
 
-        val saveFavorite = SaveFavorite(
-                FavoriteRepository(
-                        RoomFavoriteDataSource(
-                                FavoriteDatabase.getInstance(requireContext())
-                        )
+        val favoriteRepository = FavoriteRepository(
+                RoomFavoriteDataSource(
+                        FavoriteDatabase.getInstance(requireContext())
                 )
         )
+        
+        val saveFavorite = SaveFavorite(favoriteRepository)
 
-        homeViewModel = getViewModel { HomeViewModel(getSport, getEvents, saveFavorite) }
+        val getFavorite = GetFavorites(favoriteRepository)
+
+        homeViewModel = getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
 
         binding.homeViewModel = homeViewModel
 
@@ -186,17 +185,17 @@ class HomeFragment : Fragment() {
 
         homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
 
-        homeViewModel.onFavoriteSaved.observe(viewLifecycleOwner){
-            it.getContentIfNotHandled().let {
-                binding.root.snackBar(getString(R.string.favorite_saved_msg))
+        homeViewModel.onFavoriteSaved.observe(viewLifecycleOwner){ event ->
+            event.getContentIfNotHandled().let {
+                when(it){
+                  0 -> binding.root.snackBar(getString(R.string.favorite_already_saved))
+                  1 -> binding.root.snackBar(getString(R.string.favorite_saved_msg))
+                }
             }
         }
 
         return binding.root
     }
-
-
-
 
     private fun getMyLocation() {
         lifecycleScope.launch {
