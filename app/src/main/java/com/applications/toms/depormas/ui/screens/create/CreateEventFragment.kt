@@ -17,14 +17,17 @@ import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.AndroidPermissionChecker
 import com.applications.toms.depormas.data.PlayServicesLocationDataSource
 import com.applications.toms.depormas.data.database.local.RoomEventDataSource
+import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
 import com.applications.toms.depormas.data.database.remote.SportFirestoreServer
 import com.applications.toms.depormas.data.database.local.RoomSportDataSource
 import com.applications.toms.depormas.data.database.local.event.EventDatabase
+import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
 import com.applications.toms.depormas.data.database.local.sport.SportDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
+import com.applications.toms.depormas.data.repository.FavoriteRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentCreateEventBinding
 import com.applications.toms.depormas.domain.Location
@@ -90,18 +93,23 @@ class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInter
         setHasOptionsMenu(true)
 
         val getSport = GetSports(
-            SportRepository(
-                    lifecycleScope,
-                    RoomSportDataSource(SportDatabase.getInstance(requireContext())),
-                    SportFirestoreServer()
-            )
+                SportRepository(
+                        lifecycleScope,
+                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
+                        SportFirestoreServer()
+                )
         )
         val saveEvent = SaveEvent(
-            EventRepository(
-                    lifecycleScope,
-                    RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                    EventFirestoreServer()
-            )
+                EventRepository(
+                        lifecycleScope,
+                        RoomEventDataSource(EventDatabase.getInstance(requireContext())),
+                        EventFirestoreServer()
+                ),
+                FavoriteRepository(
+                        RoomFavoriteDataSource(
+                                FavoriteDatabase.getInstance(requireContext())
+                        )
+                )
         )
 
         createViewModel = getViewModel { CreateViewModel(getSport, saveEvent) }

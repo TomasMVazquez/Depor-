@@ -46,6 +46,8 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
 
+    private lateinit var myLocation: Map<String, Double>
+
     private val coarseLocationPermissionRequester =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
             when{
@@ -63,7 +65,7 @@ class HomeFragment : Fragment() {
     private val eventAdapter by lazy {
         EventAdapter(
                 EventListener { event ->
-                    Toast.makeText(requireContext(),"${event.event_name}",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), event.event_name,Toast.LENGTH_SHORT).show()
                 }
         )
     }
@@ -78,6 +80,8 @@ class HomeFragment : Fragment() {
             inflater, R.layout.fragment_home, container, false)
 
         setHasOptionsMenu(true)
+
+        getMyLocation()
 
         val getSport = GetSports(
                 SportRepository(
@@ -102,18 +106,12 @@ class HomeFragment : Fragment() {
         binding.sportRecycler.adapter = sportAdapter
         binding.eventRecycler.adapter = eventAdapter
 
-        lifecycleScope.launch {
-            eventAdapter.myLocation =  GetMyLocation(
-                    LocationRepository(
-                            PlayServicesLocationDataSource(requireContext()),
-                            AndroidPermissionChecker(requireContext())
-                    )
-            ).invoke()
-            eventAdapter.notifyDataSetChanged()
-        }
-
         homeViewModel.sports.observe(viewLifecycleOwner){
             sportAdapter.submitList(it)
+        }
+
+        homeViewModel.events.observe(viewLifecycleOwner){
+            homeViewModel.onFilterEventsBySportSelected(homeViewModel.selectedSport.value!!)
         }
 
         homeViewModel.selectedSport.observe(viewLifecycleOwner){
@@ -126,6 +124,19 @@ class HomeFragment : Fragment() {
         homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
 
         return binding.root
+    }
+
+    private fun getMyLocation() {
+        lifecycleScope.launch {
+            myLocation = GetMyLocation(
+                    LocationRepository(
+                            PlayServicesLocationDataSource(requireContext()),
+                            AndroidPermissionChecker(requireContext())
+                    )
+            ).invoke()
+            eventAdapter.myLocation = myLocation
+            eventAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun updateUi(model: UiModel){

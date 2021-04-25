@@ -13,6 +13,7 @@
     <string name="firestore_collection_sport">sports</string>
     <string name="database_table_sport">sport_table</string>
     <string name="database_table_event">event_table</string>
+    <string name="database_table_favorite">favorite_table</string>
 
     // Onboarding
     <string name="onboarding_one_title">Crea un evento</string>

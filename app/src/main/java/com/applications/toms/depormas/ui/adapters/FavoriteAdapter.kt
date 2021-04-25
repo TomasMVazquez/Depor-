@@ -2,14 +2,12 @@ package com.applications.toms.depormas.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location.distanceBetween
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.applications.toms.depormas.R
-import com.applications.toms.depormas.databinding.RecyclerEventItemBinding
+import com.applications.toms.depormas.databinding.RecyclerFavEventItemBinding
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Location
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -19,14 +17,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.math.MathContext
-import kotlin.math.roundToLong
 
-
-class EventAdapter(private val clickListener: EventListener):
-    ListAdapter<Event, EventAdapter.ViewHolder>(ClassDiffCallback()) {
-
-    var myLocation: Map<String, Double> = emptyMap()
+class FavoriteAdapter(private val clickListener: FavoriteListener):
+    ListAdapter<Event, FavoriteAdapter.ViewHolder>(ClassDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -34,16 +27,16 @@ class EventAdapter(private val clickListener: EventListener):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item!!, clickListener, myLocation)
+        holder.bind(item!!, clickListener)
     }
 
-    class ViewHolder private constructor(val binding: RecyclerEventItemBinding): RecyclerView.ViewHolder(binding.root), OnMapReadyCallback {
+    class ViewHolder private constructor(val binding: RecyclerFavEventItemBinding): RecyclerView.ViewHolder(binding.root), OnMapReadyCallback {
 
         private lateinit var map: GoogleMap
         private lateinit var context: Context
         private lateinit var location: Location
 
-        fun bind(item: Event, clickListener: EventListener, myLocation:  Map<String, Double>) {
+        fun bind(item: Event, clickListener: FavoriteListener) {
             context = itemView.context
             location = item.location
             binding.clickListener = clickListener
@@ -52,21 +45,7 @@ class EventAdapter(private val clickListener: EventListener):
             mapView.onCreate(null)
             mapView.onResume()
             mapView.getMapAsync(this)
-            calculateDistanceFromMyLocation(myLocation)
             binding.executePendingBindings()
-        }
-
-        private fun calculateDistanceFromMyLocation(myLocation: Map<String, Double>) {
-            val results = FloatArray(1)
-            distanceBetween(
-                myLocation["latitude"] ?: 0.0,
-                myLocation["longitude"] ?: 0.0,
-                location.latitude,
-                location.longitude,
-                results
-            )
-            val distance = results[0].div(1000).toBigDecimal(MathContext(2))
-            binding.distance.text = String.format(context.getString(R.string.item_km_from_you),distance)
         }
 
         @SuppressLint("MissingPermission")
@@ -85,7 +64,7 @@ class EventAdapter(private val clickListener: EventListener):
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater =  LayoutInflater.from(parent.context)
-                val binding = RecyclerEventItemBinding.inflate(layoutInflater, parent, false)
+                val binding = RecyclerFavEventItemBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(
                         binding
                 )
@@ -105,6 +84,6 @@ class EventAdapter(private val clickListener: EventListener):
     }
 }
 
-class EventListener(val clickListener: (event: Event) -> Unit){
+class FavoriteListener(val clickListener: (event: Event) -> Unit){
     fun onClick(event: Event) = clickListener(event)
 }

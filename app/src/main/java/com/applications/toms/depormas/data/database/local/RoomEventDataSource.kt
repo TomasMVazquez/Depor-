@@ -18,5 +18,6 @@ class RoomEventDataSource(db: EventDatabase): LocalEventDataSource {
         eventDao.insertAllEvents(*events.toDatabaseModel())
     }
 
-    override fun getAllEvent(): List<Event> = eventDao.getAll().map { it.toDomainModel() }
+    override fun getAllEvent(): Flow<List<Event>> = eventDao.getAll().map { it.toDomainModel() }
+
 }

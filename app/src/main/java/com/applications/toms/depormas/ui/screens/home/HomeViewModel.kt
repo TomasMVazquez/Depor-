@@ -1,10 +1,14 @@
 package com.applications.toms.depormas.ui.screens.home
 
 import androidx.lifecycle.*
+import com.applications.toms.depormas.data.AndroidPermissionChecker
+import com.applications.toms.depormas.data.PlayServicesLocationDataSource
+import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.domain.filterBySport
 import com.applications.toms.depormas.usecases.GetEvents
+import com.applications.toms.depormas.usecases.GetMyLocation
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
@@ -18,7 +22,7 @@ class HomeViewModel(
         ): ViewModel(), Scope by ImplementJob() {
 
     val sports = getSports.invoke().asLiveData()
-    val events = getEvents.invoke()
+    val events = getEvents.invoke().asLiveData()
 
     private val allSports = Sport(-1,"","ic_all_sports",-1, false)
 
@@ -27,7 +31,7 @@ class HomeViewModel(
 
     sealed class UiModel {
         object Loading: UiModel()
-        class Content(val events: List<Event>): UiModel()
+        class Content(val events: List<Event>?): UiModel()
         object RequestLocationPermission : UiModel()
     }
 
@@ -50,7 +54,7 @@ class HomeViewModel(
     fun onCoarseLocationPermissionRequested() {
         launch {
             _model.value = UiModel.Loading
-            _model.value = UiModel.Content(events)
+            _model.value = UiModel.Content(events.value)
         }
     }
 
@@ -66,9 +70,8 @@ class HomeViewModel(
     fun onFilterEventsBySportSelected(sport: Sport){
         launch {
             _model.value = UiModel.Loading
-            val filteredEvents = if(sport.id!! < 0) events else events.filterBySport(sport)
-            _model.value = UiModel.Content(filteredEvents)
+            val sportEvents = if (sport.id < 0) events.value else events.value?.filterBySport(sport)
+            _model.value = UiModel.Content(sportEvents)
         }
     }
-
 }
