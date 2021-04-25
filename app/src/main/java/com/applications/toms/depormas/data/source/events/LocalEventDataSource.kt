@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface LocalEventDataSource {
     suspend fun isEmpty():Boolean
     suspend fun saveEvents(events: List<Event>)
-    fun getAllEvent(): List<Event>
+    fun getAllEvent(): Flow<List<Event>>
 }

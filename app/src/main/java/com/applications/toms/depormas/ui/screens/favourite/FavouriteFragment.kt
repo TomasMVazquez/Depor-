@@ -7,11 +7,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.applications.toms.depormas.R
+import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
+import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
+import com.applications.toms.depormas.data.repository.FavoriteRepository
+import com.applications.toms.depormas.data.source.favorite.LocalFavoriteDataSource
 import com.applications.toms.depormas.databinding.FragmentFavouriteBinding
+import com.applications.toms.depormas.usecases.GetFavorites
+import com.applications.toms.depormas.utils.getViewModel
 
 class FavouriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavouriteBinding
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,18 @@ class FavouriteFragment : Fragment() {
             inflater, R.layout.fragment_favourite, container, false)
 
         setHasOptionsMenu(true)
+
+        favoriteViewModel = getViewModel {
+            FavoriteViewModel(
+                    GetFavorites(
+                            FavoriteRepository(
+                                    RoomFavoriteDataSource(
+                                            FavoriteDatabase.getInstance(requireContext())
+                                    )
+                            )
+                    )
+            )
+        }
 
         return binding.root
     }

@@ -112,7 +112,6 @@
                         android:id="@+id/distance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/item_km_from_you(0)}"
                         tools:text="a 4.3 KM de vos"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="@color/secondaryLightColor" />

@@ -13,7 +13,7 @@ interface EventDao {
     suspend fun insertEvent(events: Event)
 
     @Query("SELECT * FROM event_table ORDER BY created_date ASC")
-    fun getAll(): List<Event>
+    fun getAll(): Flow<List<Event>>
 
     @Query("SELECT COUNT(id) FROM event_table")
     suspend fun eventsCount(): Int
@@ -23,4 +23,5 @@ interface EventDao {
 
     @Delete
     suspend fun deleteEvent(event: Event)
+
 }

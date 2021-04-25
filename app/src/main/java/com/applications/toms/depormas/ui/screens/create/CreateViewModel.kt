@@ -72,16 +72,18 @@ class CreateViewModel(private val getSports: GetSports, private val saveEvent: S
     }
 
     private fun onCreateNetworkEvent(name: String, day: String, time: String, participants: String?) {
-        saveEvent.invoke(
-            Event(
-                id = "",
-                event_name = name,
-                date = day,
-                time = time,
-                sport = _eventSport.value!!,
-                location = _eventLocation.value!!,
-                max_players = participants?.toInt()!!,
+        launch {
+            saveEvent.invoke(
+                    Event(
+                            id = "",
+                            event_name = name,
+                            date = day,
+                            time = time,
+                            sport = _eventSport.value!!,
+                            location = _eventLocation.value!!,
+                            max_players = participants?.toInt()!!,
+                    )
             )
-        )
+        }
     }
 }

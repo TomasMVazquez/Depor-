@@ -46,13 +46,13 @@ class EventAdapter(private val clickListener: EventListener):
         fun bind(item: Event, clickListener: EventListener, myLocation:  Map<String, Double>) {
             context = itemView.context
             location = item.location
-            calculateDistanceFromMyLocation(myLocation)
             binding.clickListener = clickListener
             binding.event = item
             val mapView = binding.eventMap
             mapView.onCreate(null)
             mapView.onResume()
             mapView.getMapAsync(this)
+            calculateDistanceFromMyLocation(myLocation)
             binding.executePendingBindings()
         }
 

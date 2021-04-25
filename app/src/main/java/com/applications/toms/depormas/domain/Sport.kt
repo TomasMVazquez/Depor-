@@ -6,14 +6,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Sport(
-    val id: Int?,
-    val name: String?,
-    val img: String?,
-    val max_players: Int?,
+    val id: Int = -1,
+    val name: String = "",
+    val img: String = "",
+    val max_players: Int = -1,
     var choosen: Boolean = false
 ): Parcelable{
-
-    constructor() : this(null,null,null,null)
 
     fun getDrawableInt(context: Context): Int = context.resources.getIdentifier(img,"drawable",context.packageName)
 

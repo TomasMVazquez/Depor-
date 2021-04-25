@@ -14,7 +14,7 @@ class EventRepository(
         private val remoteDataSource: RemoteEventDataSource
 ) {
 
-    fun getEvents(): List<Event> {
+    fun getEvents(): Flow<List<Event>> {
         refreshEvents()
         return localDataSource.getAllEvent()
     }
