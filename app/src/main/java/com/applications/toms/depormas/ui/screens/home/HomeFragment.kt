@@ -34,18 +34,17 @@ import com.applications.toms.depormas.data.repository.EventRepository
 import com.applications.toms.depormas.data.repository.FavoriteRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
+import com.applications.toms.depormas.domain.Event
+import com.applications.toms.depormas.domain.filterBySport
 import com.applications.toms.depormas.ui.adapters.EventAdapter
 import com.applications.toms.depormas.ui.adapters.EventListener
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
-import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
-import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
 import com.applications.toms.depormas.usecases.*
 import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
@@ -66,6 +65,7 @@ class HomeFragment : Fragment() {
         }
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
+        sport.choosen = !sport.choosen
         updateAdapter(sport)
     }) }
 
@@ -128,8 +128,44 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        getMyLocation()
+        homeViewModel = getViewModel(::buildViewModel)
 
+        binding.homeViewModel = homeViewModel
+
+        binding.sportRecycler.adapter = sportAdapter
+        binding.eventRecycler.adapter = eventAdapter
+
+        swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_save_favorite)!!
+
+        val myHelper = ItemTouchHelper(onSwipeCallback)
+        myHelper.attachToRecyclerView(binding.eventRecycler)
+
+        lifecycleScope.launchWhenStarted {
+            getMyLocation()
+            homeViewModel.selectedSport.collect {
+                binding.dashboardImg.setImageResource(it.getDrawableInt(binding.dashboardImg.context))
+            }
+        }
+
+        homeViewModel.sports.observe(viewLifecycleOwner){
+            sportAdapter.submitList(it)
+        }
+
+        homeViewModel.events.observe(viewLifecycleOwner,::updateUi)
+
+        homeViewModel.onFavoriteSaved.observe(viewLifecycleOwner){ event ->
+            event.getContentIfNotHandled().let {
+                when(it){
+                  0 -> binding.root.snackBar(getString(R.string.favorite_already_saved))
+                  1 -> binding.root.snackBar(getString(R.string.favorite_saved_msg))
+                }
+            }
+        }
+
+        return binding.root
+    }
+
+    private fun buildViewModel(): HomeViewModel {
         val getSport = GetSports(
                 SportRepository(
                         lifecycleScope,
@@ -151,94 +187,52 @@ class HomeFragment : Fragment() {
                         FavoriteDatabase.getInstance(requireContext())
                 )
         )
-        
+
         val saveFavorite = SaveFavorite(favoriteRepository)
 
         val getFavorite = GetFavorites(favoriteRepository)
 
-        homeViewModel = getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
-
-        binding.homeViewModel = homeViewModel
-
-        binding.sportRecycler.adapter = sportAdapter
-        binding.eventRecycler.adapter = eventAdapter
-
-        swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_save_favorite)!!
-
-        val myHelper = ItemTouchHelper(onSwipeCallback)
-        myHelper.attachToRecyclerView(binding.eventRecycler)
-
-        homeViewModel.sports.observe(viewLifecycleOwner){
-            sportAdapter.submitList(it)
-        }
-
-        homeViewModel.events.observe(viewLifecycleOwner){
-            homeViewModel.onFilterEventsBySportSelected(homeViewModel.selectedSport.value!!)
-        }
-
-        homeViewModel.selectedSport.observe(viewLifecycleOwner){
-            if (it != null) {
-                binding.dashboardImg.setImageResource(it.getDrawableInt(binding.dashboardImg.context))
-                homeViewModel.onFilterEventsBySportSelected(it)
-            }
-        }
-
-        homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
-
-        homeViewModel.onFavoriteSaved.observe(viewLifecycleOwner){ event ->
-            event.getContentIfNotHandled().let {
-                when(it){
-                  0 -> binding.root.snackBar(getString(R.string.favorite_already_saved))
-                  1 -> binding.root.snackBar(getString(R.string.favorite_saved_msg))
-                }
-            }
-        }
-
-        return binding.root
+        return getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
     }
 
-    private fun getMyLocation() {
-        lifecycleScope.launch {
-            myLocation = GetMyLocation(
-                    LocationRepository(
-                            PlayServicesLocationDataSource(requireContext()),
-                            AndroidPermissionChecker(requireContext())
-                    )
-            ).invoke()
-            eventAdapter.myLocation = myLocation
-            eventAdapter.notifyDataSetChanged()
-        }
+    private suspend fun getMyLocation() {
+        myLocation = GetMyLocation(
+                LocationRepository(
+                        PlayServicesLocationDataSource(requireContext()),
+                        AndroidPermissionChecker(requireContext())
+                )
+        ).invoke()
+        eventAdapter.myLocation = myLocation
+        eventAdapter.notifyDataSetChanged()
     }
 
-    private fun updateUi(model: UiModel){
-        binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
-        when (model){
-            is Content -> {
-                if (model.events.isNullOrEmpty()) {
-                    eventAdapter.submitList(emptyList())
-                    binding.emptyStateGroup.visibility = View.VISIBLE
-                    binding.eventsGroup.visibility = View.GONE
-                } else {
-                    eventAdapter.submitList(model.events)
-                    binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), model.events.size);
-                    binding.emptyStateGroup.visibility = View.GONE
-                    binding.eventsGroup.visibility = View.VISIBLE
-                }
-            }
-            RequestLocationPermission -> coarseLocationPermissionRequester.launch(ACCESS_COARSE_LOCATION)
+    private fun updateUi(events: List<Event>){
+        binding.progressBar.visibility = View.GONE
+        if (events.isNullOrEmpty()) {
+            eventAdapter.submitList(emptyList())
+            binding.emptyStateGroup.visibility = View.VISIBLE
+            binding.eventsGroup.visibility = View.GONE
+        } else {
+            eventAdapter.submitList(events)
+            binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), events.size);
+            binding.emptyStateGroup.visibility = View.GONE
+            binding.eventsGroup.visibility = View.VISIBLE
         }
     }
 
     private fun updateAdapter(sportChecked: Sport) {
-        sportAdapter.currentList.map { sport ->
-            if (sport.id != sportChecked.id && sport.choosen) sport.choosen = false
+        sportAdapter.currentList.map {
+            if (it.id != sportChecked.id && it.choosen) it.choosen = false
         }
-        sportChecked.choosen = !sportChecked.choosen
+
         if (sportChecked.choosen) {
             homeViewModel.onSelectSport(sportChecked)
+            if (!sportAdapter.currentList.first { it.id == sportChecked.id }.choosen)
+                sportAdapter.currentList.first { it.id == sportChecked.id }.choosen = true
         }else {
             homeViewModel.onSelectSport(null)
         }
+
         sportAdapter.notifyDataSetChanged()
     }
 

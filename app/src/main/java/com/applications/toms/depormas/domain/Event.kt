@@ -43,6 +43,10 @@ fun List<Event>.toDatabaseModel(): Array<EventDatabase> {
     }.toTypedArray()
 }
 
-fun List<Event>.filterBySport(sport: Sport): List<Event> {
-    return filter { it.sport.id == sport.id }
+fun List<Event>.filterBySport(sportId: Int): List<Event> {
+    return if (sportId != -1) {
+        filter { it.sport.id == sportId }
+    }else{
+        this
+    }
 }

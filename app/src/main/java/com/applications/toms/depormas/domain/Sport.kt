@@ -16,3 +16,5 @@ data class Sport(
     fun getDrawableInt(context: Context): Int = context.resources.getIdentifier(img,"drawable",context.packageName)
 
 }
+
+val sportsAll = Sport(-1,"","ic_all_sports",-1, false)
