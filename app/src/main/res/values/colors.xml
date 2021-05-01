@@ -19,6 +19,7 @@
 
     <color name="accentColor">#FF018786</color>
     <color name="greenColor">#8000FF00</color>
+    <color name="greenLightColor">#8BC34A</color>
     <color name="redColor">#80FF0000</color>
     <color name="greyColor">#FF666666</color>
 

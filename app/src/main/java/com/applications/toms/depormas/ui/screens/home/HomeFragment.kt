@@ -1,28 +1,37 @@
 package com.applications.toms.depormas.ui.screens.home
 
 import android.Manifest.permission.*
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.AndroidPermissionChecker
 import com.applications.toms.depormas.data.PlayServicesLocationDataSource
 import com.applications.toms.depormas.data.database.local.RoomEventDataSource
+import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.data.repository.SportRepository
 import com.applications.toms.depormas.data.database.remote.SportFirestoreServer
 import com.applications.toms.depormas.data.database.local.RoomSportDataSource
 import com.applications.toms.depormas.data.database.local.event.EventDatabase
+import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
 import com.applications.toms.depormas.data.database.local.sport.SportDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
+import com.applications.toms.depormas.data.repository.FavoriteRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.ui.adapters.EventAdapter
@@ -31,13 +40,11 @@ import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel.UiModel.*
-import com.applications.toms.depormas.usecases.GetEvents
-import com.applications.toms.depormas.usecases.GetMyLocation
-import com.applications.toms.depormas.usecases.GetSports
+import com.applications.toms.depormas.usecases.*
 import com.applications.toms.depormas.utils.getViewModel
+import com.applications.toms.depormas.utils.snackBar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -70,6 +77,46 @@ class HomeFragment : Fragment() {
         )
     }
 
+    private lateinit var swipeIcon: Drawable
+
+    private val onSwipeCallback = object: ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.LEFT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            eventAdapter.notifyItemChanged(viewHolder.adapterPosition)
+            homeViewModel.onSwipeItemToAddToFavorite(eventAdapter.currentList[viewHolder.adapterPosition])
+        }
+
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+
+            c.clipRect(
+                    viewHolder.itemView.right + dX.toInt(),
+                    viewHolder.itemView.top,
+                    viewHolder.itemView.right,
+                    viewHolder.itemView.bottom
+            )
+
+            if(viewHolder.itemView.right + dX > viewHolder.itemView.width * 0.66)
+                c.drawColor(ContextCompat.getColor(requireContext(),R.color.greyColor))
+            else
+                c.drawColor(ContextCompat.getColor(requireContext(),R.color.greenLightColor))
+
+            val iconMargin = (viewHolder.itemView.height - swipeIcon!!.intrinsicHeight) / 2
+
+            swipeIcon!!.bounds = Rect(
+                    viewHolder.itemView.right - iconMargin - swipeIcon!!.intrinsicWidth,
+                    viewHolder.itemView.top + iconMargin,
+                    viewHolder.itemView.right - iconMargin,
+                    viewHolder.itemView.bottom - iconMargin
+            )
+
+            swipeIcon!!.draw(c)
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        }
+    }
+
     @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,12 +146,27 @@ class HomeFragment : Fragment() {
                 )
         )
 
-        homeViewModel = getViewModel { HomeViewModel(getSport,getEvents) }
+        val favoriteRepository = FavoriteRepository(
+                RoomFavoriteDataSource(
+                        FavoriteDatabase.getInstance(requireContext())
+                )
+        )
+        
+        val saveFavorite = SaveFavorite(favoriteRepository)
+
+        val getFavorite = GetFavorites(favoriteRepository)
+
+        homeViewModel = getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
 
         binding.homeViewModel = homeViewModel
 
         binding.sportRecycler.adapter = sportAdapter
         binding.eventRecycler.adapter = eventAdapter
+
+        swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_save_favorite)!!
+
+        val myHelper = ItemTouchHelper(onSwipeCallback)
+        myHelper.attachToRecyclerView(binding.eventRecycler)
 
         homeViewModel.sports.observe(viewLifecycleOwner){
             sportAdapter.submitList(it)
@@ -122,6 +184,15 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
+
+        homeViewModel.onFavoriteSaved.observe(viewLifecycleOwner){ event ->
+            event.getContentIfNotHandled().let {
+                when(it){
+                  0 -> binding.root.snackBar(getString(R.string.favorite_already_saved))
+                  1 -> binding.root.snackBar(getString(R.string.favorite_saved_msg))
+                }
+            }
+        }
 
         return binding.root
     }
