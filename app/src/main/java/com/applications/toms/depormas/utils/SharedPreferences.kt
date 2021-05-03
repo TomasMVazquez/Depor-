@@ -17,11 +17,16 @@ class SharedPreferences(context: Context){
         get() = preferences.getBoolean(ON_BOARDING,false)
         set(value) = preferences.edit { putBoolean(ON_BOARDING,value) }
 
+    var permissionToLocation: Boolean
+        get() = preferences.getBoolean(LOCATION_PERMISSION,false)
+        set(value) = preferences.edit(){ putBoolean(LOCATION_PERMISSION,value) }
+
     fun isDarkModeSelected(): Boolean = preferences.contains(DARK_MODE)
 
     companion object{
         private const val DARK_MODE = "dark_mode"
         private const val ON_BOARDING = "onBoarding"
+        private const val LOCATION_PERMISSION = "location_permission"
     }
 }
 /*

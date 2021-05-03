@@ -2,6 +2,8 @@ package com.applications.toms.depormas.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import com.applications.toms.depormas.data.database.local.event.Event as EventDatabase
 
@@ -17,10 +19,6 @@ data class Event(
         val created_date: Date = Date(System.currentTimeMillis()),
         var participants: Int = 1
 ): Parcelable {
-
-    fun addParticipant() = participants++
-
-    fun removeParticipant() = participants--
 
     fun getDateTime(): String = "$date - ${time}hs"
 }

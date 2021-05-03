@@ -7,7 +7,10 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.preferences
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 fun setConstraintStatusBarMargin(context: Context, constraintLayout: ConstraintLayout) {
     val statusBarHeightId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -27,3 +30,9 @@ fun setSelectedMode(){
     }
 }
 
+val dateStringComparator = Comparator { event1: Event, event2: Event ->
+    val df = DateTimeFormatter.ofPattern("d/MM/yyyy")
+    val date1 = LocalDate.parse(event1.date,df)
+    val date2 = LocalDate.parse(event2.date, df)
+    date1.compareTo(date2)
+}

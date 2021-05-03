@@ -33,10 +33,25 @@ class PlayServicesLocationDataSource(context: Context) : LocationDataSource {
                 }
         }
 
+    override suspend fun findLastRegion(): String? =
+        suspendCancellableCoroutine { continuation ->
+            fusedLocationClient.lastLocation
+                .addOnCompleteListener {
+                    continuation.resume(it.result.toRegion())
+                }
+        }
+
     private fun Location?.toAddress(): Address {
         val addresses = this?.let {
             geoCoder.getFromLocation(latitude, longitude, 1)
         }
         return addresses!!.first()
+    }
+
+    private fun Location?.toRegion(): String? {
+        val addresses = this?.let {
+            geoCoder.getFromLocation(latitude, longitude, 1)
+        }
+        return addresses?.firstOrNull()?.countryCode
     }
 }

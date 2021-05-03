@@ -27,10 +27,19 @@ class LocationRepository(
         }
     }
 
+    suspend fun findLastRegion(): String {
+        return if (permissionChecker.check(Permission.COARSE_LOCATION) || permissionChecker.check(Permission.FINE_LOCATION)) {
+            locationDataSource.findLastRegion() ?: DEFAULT_REGION
+        } else {
+            DEFAULT_REGION
+        }
+    }
+
     companion object{
         private val DEFAULT_LOCATION = mapOf(
                 "latitude" to 0.0,
                 "longitude" to 0.0
         )
+        private const val DEFAULT_REGION = ""
     }
 }

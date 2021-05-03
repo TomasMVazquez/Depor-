@@ -4,6 +4,7 @@ import android.Manifest.permission.*
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -35,12 +36,13 @@ import com.applications.toms.depormas.data.repository.FavoriteRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.domain.Event
-import com.applications.toms.depormas.domain.filterBySport
+import com.applications.toms.depormas.preferences
 import com.applications.toms.depormas.ui.adapters.EventAdapter
 import com.applications.toms.depormas.ui.adapters.EventListener
 import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.usecases.*
+import com.applications.toms.depormas.utils.dateStringComparator
 import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
 import kotlinx.coroutines.*
@@ -53,15 +55,18 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
 
     private lateinit var myLocation: Map<String, Double>
+    private val getMyLocation by lazy {
+        GetMyLocation(
+            LocationRepository(
+                    PlayServicesLocationDataSource(requireContext()),
+                    AndroidPermissionChecker(requireContext())
+            )
+        )
+    }
 
     private val coarseLocationPermissionRequester =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()){ granted ->
-            when{
-                granted -> homeViewModel.onCoarseLocationPermissionRequested()
-                shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION) -> Log.d(TAG, "rational") //TODO rational
-                else -> Log.d(TAG, "denied")//TODO filter depending on permission granted/denied
-            }
-
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){
+            preferences.permissionToLocation = true
         }
 
     private val sportAdapter by lazy { SportAdapter(SportListener { sport ->
@@ -102,16 +107,16 @@ class HomeFragment : Fragment() {
             else
                 c.drawColor(ContextCompat.getColor(requireContext(),R.color.greenLightColor))
 
-            val iconMargin = (viewHolder.itemView.height - swipeIcon!!.intrinsicHeight) / 2
+            val iconMargin = (viewHolder.itemView.height - swipeIcon.intrinsicHeight) / 2
 
-            swipeIcon!!.bounds = Rect(
-                    viewHolder.itemView.right - iconMargin - swipeIcon!!.intrinsicWidth,
+            swipeIcon.bounds = Rect(
+                    viewHolder.itemView.right - iconMargin - swipeIcon.intrinsicWidth,
                     viewHolder.itemView.top + iconMargin,
                     viewHolder.itemView.right - iconMargin,
                     viewHolder.itemView.bottom - iconMargin
             )
 
-            swipeIcon!!.draw(c)
+            swipeIcon.draw(c)
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
@@ -128,6 +133,10 @@ class HomeFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        if (!preferences.permissionToLocation) {
+            coarseLocationPermissionRequester.launch(ACCESS_COARSE_LOCATION)
+        }
+
         homeViewModel = getViewModel(::buildViewModel)
 
         binding.homeViewModel = homeViewModel
@@ -140,8 +149,9 @@ class HomeFragment : Fragment() {
         val myHelper = ItemTouchHelper(onSwipeCallback)
         myHelper.attachToRecyclerView(binding.eventRecycler)
 
+        getMyLocation()
+
         lifecycleScope.launchWhenStarted {
-            getMyLocation()
             homeViewModel.selectedSport.collect {
                 binding.dashboardImg.setImageResource(it.getDrawableInt(binding.dashboardImg.context))
             }
@@ -166,6 +176,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun buildViewModel(): HomeViewModel {
+
         val getSport = GetSports(
                 SportRepository(
                         lifecycleScope,
@@ -195,15 +206,13 @@ class HomeFragment : Fragment() {
         return getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
     }
 
-    private suspend fun getMyLocation() {
-        myLocation = GetMyLocation(
-                LocationRepository(
-                        PlayServicesLocationDataSource(requireContext()),
-                        AndroidPermissionChecker(requireContext())
-                )
-        ).invoke()
-        eventAdapter.myLocation = myLocation
-        eventAdapter.notifyDataSetChanged()
+    private fun getMyLocation() {
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.updateRegion(getMyLocation.getRegion())
+            myLocation = getMyLocation.getLocation()
+            eventAdapter.myLocation = myLocation
+            eventAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun updateUi(events: List<Event>){
@@ -213,7 +222,7 @@ class HomeFragment : Fragment() {
             binding.emptyStateGroup.visibility = View.VISIBLE
             binding.eventsGroup.visibility = View.GONE
         } else {
-            eventAdapter.submitList(events)
+            eventAdapter.submitList(events.sortedWith(dateStringComparator))
             binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), events.size);
             binding.emptyStateGroup.visibility = View.GONE
             binding.eventsGroup.visibility = View.VISIBLE

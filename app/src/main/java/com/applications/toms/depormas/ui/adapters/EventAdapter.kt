@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location.distanceBetween
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -53,7 +54,12 @@ class EventAdapter(private val clickListener: EventListener):
             mapView.onCreate(null)
             mapView.onResume()
             mapView.getMapAsync(this)
-            calculateDistanceFromMyLocation(myLocation)
+            if (myLocation.isNotEmpty()) {
+                binding.distance.visibility = View.VISIBLE
+                calculateDistanceFromMyLocation(myLocation)
+            }else{
+                binding.distance.visibility = View.INVISIBLE
+            }
             binding.executePendingBindings()
         }
 

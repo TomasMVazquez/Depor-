@@ -14,7 +14,6 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.AndroidPermissionChecker
-import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.data.source.PermissionChecker.Permission
 import com.applications.toms.depormas.databinding.BottomSheetMapBinding
 import com.applications.toms.depormas.domain.Location
@@ -96,7 +95,7 @@ class BottomSheetMap(
 
     private fun setLocation() {
         coroutineScope.launch {
-            val findLastLocation = getMyLocation.invoke()
+            val findLastLocation = getMyLocation.getLocation()
             val latitude = findLastLocation["latitude"]!!
             val longitude = findLastLocation["longitude"]!!
             val location = LatLng(latitude, longitude)

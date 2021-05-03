@@ -27,10 +27,19 @@ class HomeViewModel(
     private val _selectedSport = MutableStateFlow(sportsAll)
     val selectedSport: StateFlow<Sport> get() = _selectedSport
 
+    private val _region = MutableStateFlow("")
+    val region: StateFlow<String> get() = _region
+
     val sports = getSports.invoke().asLiveData()
     private val favorites = getFavorites.invoke()
     val events = getEvents.invoke()
             .flowOn(Dispatchers.IO).catch { emit(emptyList()) }
+            .combine(region){ list, region -> list.filter { event ->
+                if(region.isEmpty())
+                    true
+                else
+                    event.location.countryCode == region
+            } }
             .combine(selectedSport){ list, sport -> list.filterBySport(sport.id) }
             .conflate().asLiveData()
 
@@ -41,13 +50,13 @@ class HomeViewModel(
         initScope()
     }
 
-    fun onCoarseLocationPermissionRequested() {
-        //TODO PERMISION GRANTED
-    }
-
     override fun onCleared() {
         cancelScope()
         super.onCleared()
+    }
+
+    fun updateRegion(region: String?) {
+        _region.value = region ?: ""
     }
 
     fun onSelectSport(sportChecked: Sport?) {

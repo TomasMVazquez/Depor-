@@ -6,4 +6,5 @@ import android.location.Location
 interface LocationDataSource {
     suspend fun findLastLocation(): Location
     suspend fun findMyCurrentLocation(): Address
+    suspend fun findLastRegion(): String?
 }
