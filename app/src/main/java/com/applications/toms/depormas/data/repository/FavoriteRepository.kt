@@ -9,6 +9,8 @@ class FavoriteRepository(private val localFavoriteDataSource: LocalFavoriteDataS
 
     fun saveNewFavorite(favorite: Favorite) = localFavoriteDataSource.saveFavorite(favorite)
 
-    suspend fun deleteFavorite(favorite: Favorite) = localFavoriteDataSource.deleteFavorite(favorite)
+    fun deleteFavorite(eventId: String) = localFavoriteDataSource.deleteFavorite(eventId)
+
+    fun isFavorite(eventId: String): Boolean = localFavoriteDataSource.findFavorite(eventId) > 0
 
 }

@@ -11,13 +11,11 @@ import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel(
         private val getSports: GetSports,
         private val getEvents: GetEvents,
-        private val getFavorites: GetFavorites,
+        private val isFavorites: IsFavorite,
         private val saveFavorite: SaveFavorite
         ): ViewModel(), Scope by ImplementJob() {
 
@@ -28,7 +26,7 @@ class HomeViewModel(
     val region: StateFlow<String> get() = _region
 
     val sports = getSports.invoke().asLiveData()
-    private val favorites = getFavorites.invoke()
+
     val events = getEvents.invoke()
             .flowOn(Dispatchers.IO).catch { emit(emptyList()) }
             .combine(region){ list, region -> list.filter { event ->
@@ -57,8 +55,7 @@ class HomeViewModel(
 
     fun onSwipeItemToAddToFavorite(event: Event?) {
         if (event != null) {
-            val isFavoriteAlready = favorites.find { it.eventId == event.id }
-            if (isFavoriteAlready != null){
+            if (isFavorites.invoke(event.id)){
                 _onFavoriteSaved.value = EventWrapper(0)
             }else {
                 event.addParticipant()

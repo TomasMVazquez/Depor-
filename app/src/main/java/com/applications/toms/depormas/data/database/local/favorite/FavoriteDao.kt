@@ -1,6 +1,7 @@
 package com.applications.toms.depormas.data.database.local.favorite
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
@@ -9,11 +10,14 @@ interface FavoriteDao {
     fun insert(favorite: Favorite)
 
     @Query("SELECT * FROM favorite_table ORDER BY id ASC")
-    fun getAll(): List<Favorite>
+    fun getAll(): Flow<List<Favorite>>
+
+    @Query("SELECT COUNT(id) FROM favorite_table WHERE eventId = :eventId")
+    fun findFavorite(eventId: String): Int
 
     @Query("SELECT COUNT(id) FROM favorite_table")
     fun favoriteCount(): Int
 
-    @Delete
-    suspend fun deleteFavorite(favorite: Favorite)
+    @Query("DELETE FROM favorite_table WHERE eventId = :eventId")
+    fun deleteFavorite(eventId: String)
 }
