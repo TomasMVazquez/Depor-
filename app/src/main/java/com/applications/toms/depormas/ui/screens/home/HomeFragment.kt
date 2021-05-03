@@ -4,9 +4,7 @@ import android.Manifest.permission.*
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -146,8 +144,7 @@ class HomeFragment : Fragment() {
 
         swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_save_favorite)!!
 
-        val myHelper = ItemTouchHelper(onSwipeCallback)
-        myHelper.attachToRecyclerView(binding.eventRecycler)
+        ItemTouchHelper(onSwipeCallback).attachToRecyclerView(binding.eventRecycler)
 
         getMyLocation()
 
@@ -157,9 +154,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        homeViewModel.sports.observe(viewLifecycleOwner){
-            sportAdapter.submitList(it)
-        }
+        homeViewModel.sports.observe(viewLifecycleOwner,sportAdapter::submitList)
 
         homeViewModel.events.observe(viewLifecycleOwner,::updateUi)
 
@@ -201,7 +196,7 @@ class HomeFragment : Fragment() {
 
         val saveFavorite = SaveFavorite(favoriteRepository,eventRepository)
 
-        val getFavorite = GetFavorites(favoriteRepository)
+        val getFavorite = IsFavorite(favoriteRepository)
 
         return getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
     }

@@ -1,31 +1,38 @@
 package com.applications.toms.depormas.ui.screens.favourite
 
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.database.local.RoomEventDataSource
 import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
 import com.applications.toms.depormas.data.database.local.event.EventDatabase
+import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
 import com.applications.toms.depormas.data.repository.FavoriteRepository
-import com.applications.toms.depormas.data.source.favorite.LocalFavoriteDataSource
 import com.applications.toms.depormas.databinding.FragmentFavouriteBinding
+import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.ui.adapters.FavoriteAdapter
 import com.applications.toms.depormas.ui.adapters.FavoriteListener
-import com.applications.toms.depormas.ui.screens.favourite.FavoriteViewModel.*
-import com.applications.toms.depormas.ui.screens.favourite.FavoriteViewModel.UiModel.*
 import com.applications.toms.depormas.usecases.GetEvents
-import com.applications.toms.depormas.usecases.GetFavorites
+import com.applications.toms.depormas.usecases.MyFavorite
+import com.applications.toms.depormas.utils.dateStringComparator
 import com.applications.toms.depormas.utils.getViewModel
+import com.applications.toms.depormas.utils.snackBar
+import com.google.android.material.snackbar.Snackbar
 
 class FavouriteFragment : Fragment() {
 
@@ -38,6 +45,45 @@ class FavouriteFragment : Fragment() {
         })
     }
 
+    private lateinit var swipeIcon: Drawable
+
+    private val onSwipeCallback = object: ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.LEFT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            favoriteViewModel.onSwipeItemToRemoveFavorite(favoriteAdapter.currentList[viewHolder.adapterPosition])
+        }
+
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+
+            c.clipRect(
+                    viewHolder.itemView.right + dX.toInt(),
+                    viewHolder.itemView.top,
+                    viewHolder.itemView.right,
+                    viewHolder.itemView.bottom
+            )
+
+            if(viewHolder.itemView.right + dX > viewHolder.itemView.width * 0.66)
+                c.drawColor(ContextCompat.getColor(requireContext(),R.color.greyColor))
+            else
+                c.drawColor(ContextCompat.getColor(requireContext(),R.color.redLightColor))
+
+            val iconMargin = (viewHolder.itemView.height - swipeIcon.intrinsicHeight) / 2
+
+            swipeIcon.bounds = Rect(
+                    viewHolder.itemView.right - iconMargin - swipeIcon.intrinsicWidth,
+                    viewHolder.itemView.top + iconMargin,
+                    viewHolder.itemView.right - iconMargin,
+                    viewHolder.itemView.bottom - iconMargin
+            )
+
+            swipeIcon.draw(c)
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,13 +94,15 @@ class FavouriteFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)!!
+
         favoriteViewModel = getViewModel {
             FavoriteViewModel(
-                    GetFavorites(
+                    MyFavorite(
                             FavoriteRepository(
-                                    RoomFavoriteDataSource(
-                                            FavoriteDatabase.getInstance(requireContext())
-                                    )
+                                RoomFavoriteDataSource(
+                                        FavoriteDatabase.getInstance(requireContext())
+                                )
                             )
                     ),
                     GetEvents(
@@ -69,28 +117,34 @@ class FavouriteFragment : Fragment() {
 
         binding.favoritesRecycler.adapter = favoriteAdapter
 
-        favoriteViewModel.events.observe(viewLifecycleOwner){
-            favoriteViewModel.getFavoriteEvents(it)
-        }
+        ItemTouchHelper(onSwipeCallback).attachToRecyclerView(binding.favoritesRecycler)
 
-        favoriteViewModel.model.observe(viewLifecycleOwner, ::updateUi)
+        favoriteViewModel.favorites.observe(viewLifecycleOwner,::updateUi)
+
+        favoriteViewModel.onFavoriteRemoved.observe(viewLifecycleOwner){ event ->
+            event.getContentIfNotHandled()?.let { mapItemRemoved ->
+                when(mapItemRemoved[STATUS]){
+                    0 -> Snackbar.make(binding.root, getString(R.string.favorite_remove_msg), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.snack_action_undo)){
+                                favoriteViewModel.saveFavoriteAfterRemoveIt(mapItemRemoved[FAVORITE] as String)
+                            }.show()
+                    1 -> binding.root.snackBar(getString(R.string.favorite_undo_msg))
+                }
+            }
+        }
 
         return binding.root
     }
 
-    private fun updateUi(model: UiModel){
-        binding.progressBar.visibility = if (model == Loading) View.VISIBLE else View.GONE
-        when (model){
-            is Content -> {
-                if (model.events.isNotEmpty()){
-                    favoriteAdapter.submitList(model.events)
-                    binding.emptyState.visibility = View.GONE
-                    binding.favoritesRecycler.visibility = View.VISIBLE
-                }else{
-                    binding.emptyState.visibility = View.VISIBLE
-                    binding.favoritesRecycler.visibility = View.GONE
-                }
-            }
+    private fun updateUi(list: List<Event>){
+        binding.progressBar.visibility = View.GONE
+        if (list.isNotEmpty()){
+            favoriteAdapter.submitList(list.sortedWith(dateStringComparator))
+            binding.emptyState.visibility = View.GONE
+            binding.favoritesRecycler.visibility = View.VISIBLE
+        }else{
+            binding.emptyState.visibility = View.VISIBLE
+            binding.favoritesRecycler.visibility = View.GONE
         }
     }
 
@@ -106,5 +160,7 @@ class FavouriteFragment : Fragment() {
 
     companion object {
         private const val TAG = "FavouriteFragment"
+        const val STATUS = "status"
+        const val FAVORITE = "favorite"
     }
 }

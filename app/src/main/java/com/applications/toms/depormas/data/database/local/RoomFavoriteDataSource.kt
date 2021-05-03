@@ -4,6 +4,7 @@ import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
 import com.applications.toms.depormas.data.source.favorite.LocalFavoriteDataSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class RoomFavoriteDataSource(db: FavoriteDatabase): LocalFavoriteDataSource {
@@ -14,7 +15,9 @@ class RoomFavoriteDataSource(db: FavoriteDatabase): LocalFavoriteDataSource {
 
     override fun saveFavorite(favorite: Favorite) = favoriteDao.insert(favorite)
 
-    override fun getAllFavorite(): List<Favorite> = favoriteDao.getAll()
+    override fun findFavorite(eventId: String) = favoriteDao.findFavorite(eventId)
 
-    override suspend fun deleteFavorite(favorite: Favorite) = withContext(Dispatchers.IO){ favoriteDao.deleteFavorite(favorite) }
+    override fun getAllFavorite(): Flow<List<Favorite>> = favoriteDao.getAll()
+
+    override fun deleteFavorite(eventId: String) = favoriteDao.deleteFavorite(eventId)
 }

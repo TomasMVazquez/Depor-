@@ -31,6 +31,8 @@
     <string name="dashboard_text_sport">de %s</string>
     <string name="item_participant">Participan: %s</string>
     <string name="item_km_from_you">a %s KM de vos</string>
+    <string name="favorite_saved_msg">Evento guardado en favoritos</string>
+    <string name="favorite_already_saved">Evento ya se encuentra en tus favoritos</string>
 
     // Create
     <string name="create_hint_name">Nombre del evento</string>
@@ -45,6 +47,11 @@
     <string name="bottom_sheet_title_pick_time">Elige la hora</string>
     <string name="bottom_sheet_btn_done">Listo</string>
     <string name="dropped_pin">Punto de Encuentro</string>
+
+    // Favorites
+    <string name="snack_action_undo">Deshacer</string>
+    <string name="favorite_remove_msg">Evento eliminado de mis favoritos</string>
+    <string name="favorite_undo_msg">Evento restablecido a mis favoritos</string>
 
     // Configuration
     <string name="config_dark_mode">Modo Oscuro</string>
@@ -84,7 +91,6 @@
     <string name="content_description_onboarding_indicator_active">Indicador activo de pantalla de induccion</string>
     <string name="content_description_onboarding_indicator_inactive">Indicador inactivo de pantalla de induccion</string>
     <string name="content_description_empty_state">Imagen de estado vacio del deporte seleccionado</string>
-    <string name="favorite_saved_msg">Evento guardado en favoritos</string>
-    <string name="favorite_already_saved">Evento ya se encuentra en tus favoritos</string>
+
 
 </resources>
