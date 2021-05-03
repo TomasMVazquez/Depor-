@@ -177,20 +177,10 @@ class HomeFragment : Fragment() {
 
     private fun buildViewModel(): HomeViewModel {
 
-        val getSport = GetSports(
-                SportRepository(
-                        lifecycleScope,
-                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
-                        SportFirestoreServer()
-                )
-        )
-
-        val getEvents = GetEvents(
-                EventRepository(
-                        lifecycleScope,
-                        RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                        EventFirestoreServer()
-                )
+        val eventRepository = EventRepository(
+                lifecycleScope,
+                RoomEventDataSource(EventDatabase.getInstance(requireContext())),
+                EventFirestoreServer()
         )
 
         val favoriteRepository = FavoriteRepository(
@@ -199,7 +189,17 @@ class HomeFragment : Fragment() {
                 )
         )
 
-        val saveFavorite = SaveFavorite(favoriteRepository)
+        val getSport = GetSports(
+                SportRepository(
+                        lifecycleScope,
+                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
+                        SportFirestoreServer()
+                )
+        )
+
+        val getEvents = GetEvents(eventRepository)
+
+        val saveFavorite = SaveFavorite(favoriteRepository,eventRepository)
 
         val getFavorite = GetFavorites(favoriteRepository)
 

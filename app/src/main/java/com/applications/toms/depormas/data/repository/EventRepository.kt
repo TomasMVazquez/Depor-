@@ -53,7 +53,7 @@ class EventRepository(
     }
 
     fun updateEvent(event: Event){
-        remoteDataSource.getEventsCollection().document(event.id!!)
+        remoteDataSource.getEventsCollection().document(event.id)
                 .set(event, SetOptions.merge()).addOnCompleteListener { task ->
                     if (task.isSuccessful) refreshEvents()
                 }

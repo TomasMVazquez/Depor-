@@ -12,7 +12,7 @@ class RoomFavoriteDataSource(db: FavoriteDatabase): LocalFavoriteDataSource {
 
     override suspend fun isEmpty(): Boolean = withContext(Dispatchers.IO) { favoriteDao.favoriteCount() <= 0 }
 
-    override suspend fun saveFavorite(favorite: Favorite) = withContext(Dispatchers.IO) { favoriteDao.insert(favorite) }
+    override fun saveFavorite(favorite: Favorite) = favoriteDao.insert(favorite)
 
     override fun getAllFavorite(): List<Favorite> = favoriteDao.getAll()
 

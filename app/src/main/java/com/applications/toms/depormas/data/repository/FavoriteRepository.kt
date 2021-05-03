@@ -7,9 +7,7 @@ class FavoriteRepository(private val localFavoriteDataSource: LocalFavoriteDataS
 
     fun getFavoriteList() = localFavoriteDataSource.getAllFavorite()
 
-    suspend fun saveNewFavorite(favorite: Favorite) = localFavoriteDataSource.saveFavorite(favorite)
-
-    suspend fun isEmpty() = localFavoriteDataSource.isEmpty()
+    fun saveNewFavorite(favorite: Favorite) = localFavoriteDataSource.saveFavorite(favorite)
 
     suspend fun deleteFavorite(favorite: Favorite) = localFavoriteDataSource.deleteFavorite(favorite)
 

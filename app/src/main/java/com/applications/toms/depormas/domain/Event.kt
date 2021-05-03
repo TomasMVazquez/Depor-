@@ -21,6 +21,10 @@ data class Event(
 ): Parcelable {
 
     fun getDateTime(): String = "$date - ${time}hs"
+
+    fun addParticipant() = participants++
+
+    fun removeParticipant() = participants--
 }
 
 fun Event.toDatabaseModel(): EventDatabase = EventDatabase(id, event_name, date, time, sport, max_players, location, created_date, participants)

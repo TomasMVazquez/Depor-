@@ -1,8 +1,6 @@
 package com.applications.toms.depormas.ui.screens.home
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.domain.filterBySport
@@ -12,11 +10,10 @@ import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-@ExperimentalCoroutinesApi
 class HomeViewModel(
         private val getSports: GetSports,
         private val getEvents: GetEvents,
@@ -50,11 +47,6 @@ class HomeViewModel(
         initScope()
     }
 
-    override fun onCleared() {
-        cancelScope()
-        super.onCleared()
-    }
-
     fun updateRegion(region: String?) {
         _region.value = region ?: ""
     }
@@ -65,15 +57,20 @@ class HomeViewModel(
 
     fun onSwipeItemToAddToFavorite(event: Event?) {
         if (event != null) {
-            launch {
-                val isFavoriteAlready = favorites.find { it.eventId == event.id }
-                if (isFavoriteAlready != null){
-                    _onFavoriteSaved.value = EventWrapper(0)
-                }else {
-                    saveFavorite.invoke(Favorite(0, event.id))
-                    _onFavoriteSaved.value = EventWrapper(1)
-                }
+            val isFavoriteAlready = favorites.find { it.eventId == event.id }
+            if (isFavoriteAlready != null){
+                _onFavoriteSaved.value = EventWrapper(0)
+            }else {
+                event.addParticipant()
+                saveFavorite.invoke(event)
+                _onFavoriteSaved.value = EventWrapper(1)
             }
         }
     }
+
+    override fun onCleared() {
+        cancelScope()
+        super.onCleared()
+    }
+
 }
