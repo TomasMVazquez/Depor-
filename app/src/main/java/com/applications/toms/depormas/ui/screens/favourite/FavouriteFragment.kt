@@ -18,7 +18,6 @@ import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.database.local.RoomEventDataSource
 import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
 import com.applications.toms.depormas.data.database.local.event.EventDatabase
-import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
 import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
 import com.applications.toms.depormas.data.repository.EventRepository
@@ -96,6 +95,12 @@ class FavouriteFragment : Fragment() {
 
         swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)!!
 
+        val eventRepository =  EventRepository(
+                lifecycleScope,
+                RoomEventDataSource(EventDatabase.getInstance(requireContext())),
+                EventFirestoreServer()
+        )
+
         favoriteViewModel = getViewModel {
             FavoriteViewModel(
                     MyFavorite(
@@ -103,15 +108,10 @@ class FavouriteFragment : Fragment() {
                                 RoomFavoriteDataSource(
                                         FavoriteDatabase.getInstance(requireContext())
                                 )
-                            )
+                            ),
+                            eventRepository
                     ),
-                    GetEvents(
-                            EventRepository(
-                                    lifecycleScope,
-                                    RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                                    EventFirestoreServer()
-                            )
-                    )
+                    GetEvents(eventRepository)
             )
         }
 
@@ -126,7 +126,7 @@ class FavouriteFragment : Fragment() {
                 when(mapItemRemoved[STATUS]){
                     0 -> Snackbar.make(binding.root, getString(R.string.favorite_remove_msg), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.snack_action_undo)){
-                                favoriteViewModel.saveFavoriteAfterRemoveIt(mapItemRemoved[FAVORITE] as String)
+                                favoriteViewModel.saveFavoriteAfterRemoveIt(mapItemRemoved[FAVORITE] as Event)
                             }.show()
                     1 -> binding.root.snackBar(getString(R.string.favorite_undo_msg))
                 }

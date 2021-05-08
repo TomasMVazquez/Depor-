@@ -1,14 +1,9 @@
 package com.applications.toms.depormas.utils
 
 import android.content.Context
-import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
-import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.BaseTransientBottomBar

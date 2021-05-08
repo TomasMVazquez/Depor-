@@ -1,12 +1,8 @@
 package com.applications.toms.depormas.utils
 
-import android.app.Application
 import android.content.Context
-import android.util.DisplayMetrics
-import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.preferences
 import java.time.LocalDate

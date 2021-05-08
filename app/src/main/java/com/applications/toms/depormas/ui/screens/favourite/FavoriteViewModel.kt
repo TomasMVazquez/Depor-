@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.usecases.GetEvents
 import com.applications.toms.depormas.usecases.MyFavorite
@@ -47,21 +46,23 @@ class FavoriteViewModel(
     fun onSwipeItemToRemoveFavorite(event: Event?) {
         if (event != null){
             launch {
-                myFavorite.remove(event.id)
+                event.removeParticipant()
+                myFavorite.remove(event)
                 _onFavoriteRemoved.value = EventWrapper(mapOf(
                         FavouriteFragment.STATUS to 0,
-                        FavouriteFragment.FAVORITE to event.id
+                        FavouriteFragment.FAVORITE to event
                 ))
             }
         }
     }
 
-    fun saveFavoriteAfterRemoveIt(eventId: String) {
+    fun saveFavoriteAfterRemoveIt(event: Event) {
         launch {
-            myFavorite.save(Favorite(0,eventId))
+            event.addParticipant()
+            myFavorite.save(event)
             _onFavoriteRemoved.value = EventWrapper(mapOf(
                     FavouriteFragment.STATUS to 1,
-                    FavouriteFragment.FAVORITE to eventId
+                    FavouriteFragment.FAVORITE to event.id
             ))
         }
     }
