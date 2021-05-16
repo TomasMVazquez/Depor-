@@ -11,25 +11,13 @@ abstract class FavoriteDatabase: RoomDatabase() {
     abstract val favoriteDao: FavoriteDao
 
     companion object{
-        @Volatile
-        private var INSTANCE: FavoriteDatabase? = null
-
-        fun getInstance(context: Context): FavoriteDatabase {
-            synchronized(this){
-                var instance = INSTANCE
-                if (instance == null){
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        FavoriteDatabase::class.java,
-                        context.getString(R.string.database_table_favorite)
-                    )
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
+        fun getInstance(context: Context)= Room.databaseBuilder(
+            context.applicationContext,
+            FavoriteDatabase::class.java,
+            context.getString(R.string.database_table_favorite)
+        )
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

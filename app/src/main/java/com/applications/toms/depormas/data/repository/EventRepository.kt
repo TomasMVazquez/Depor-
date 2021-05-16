@@ -7,9 +7,9 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class EventRepository(
-        private val coroutineScope: CoroutineScope,
         private val localDataSource: LocalEventDataSource,
         private val remoteDataSource: RemoteEventDataSource
 ) {
@@ -26,7 +26,7 @@ class EventRepository(
             }
             val list: MutableList<Event>? = value?.toObjects(Event::class.java)
             list?.toList()?.let { listToSave ->
-                coroutineScope.launch {
+               runBlocking {
                     localDataSource.saveEvents(listToSave)
                 }
             }
