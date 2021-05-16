@@ -39,11 +39,13 @@ import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInterface {
+class CreateEventFragment : ScopeFragment(), BottomSheetInterface,BottomSheetMapInterface {
 
     private lateinit var binding: FragmentCreateEventBinding
-    private lateinit var createViewModel: CreateViewModel
+    private val createViewModel: CreateViewModel by viewModel()
 
     private val pickDayBottomSheet by lazy { BottomSheetPickDay(this) }
     private val pickTimeBottomSheet by lazy { BottomSheetPickTime(this) }
@@ -91,28 +93,6 @@ class CreateEventFragment : Fragment(), BottomSheetInterface,BottomSheetMapInter
             inflater, R.layout.fragment_create_event, container, false)
 
         setHasOptionsMenu(true)
-
-        val getSport = GetSports(
-                SportRepository(
-                        lifecycleScope,
-                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
-                        SportFirestoreServer()
-                )
-        )
-        val saveEvent = SaveEvent(
-                EventRepository(
-                        lifecycleScope,
-                        RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                        EventFirestoreServer()
-                ),
-                FavoriteRepository(
-                        RoomFavoriteDataSource(
-                                FavoriteDatabase.getInstance(requireContext())
-                        )
-                )
-        )
-
-        createViewModel = getViewModel { CreateViewModel(getSport, saveEvent) }
 
         binding.createViewModel = createViewModel
 

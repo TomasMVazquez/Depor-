@@ -12,25 +12,13 @@ abstract class EventDatabase: RoomDatabase() {
     abstract val eventDao: EventDao
 
     companion object{
-        @Volatile
-        private var INSTANCE: EventDatabase? = null
-
-        fun getInstance(context: Context): EventDatabase {
-            synchronized(this){
-                var instance = INSTANCE
-                if (instance == null){
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        EventDatabase::class.java,
-                        context.getString(R.string.database_table_event)
-                    )
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
+        fun getInstance(context: Context) = Room.databaseBuilder(
+            context.applicationContext,
+            EventDatabase::class.java,
+            context.getString(R.string.database_table_event)
+        )
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

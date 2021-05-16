@@ -32,11 +32,13 @@ import com.applications.toms.depormas.utils.dateStringComparator
 import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavouriteFragment : Fragment() {
+class FavouriteFragment : ScopeFragment() {
 
     private lateinit var binding: FragmentFavouriteBinding
-    private lateinit var favoriteViewModel: FavoriteViewModel
+    private val favoriteViewModel: FavoriteViewModel by viewModel()
 
     private val favoriteAdapter by lazy {
         FavoriteAdapter(FavoriteListener {
@@ -94,26 +96,6 @@ class FavouriteFragment : Fragment() {
         setHasOptionsMenu(true)
 
         swipeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)!!
-
-        val eventRepository =  EventRepository(
-                lifecycleScope,
-                RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                EventFirestoreServer()
-        )
-
-        favoriteViewModel = getViewModel {
-            FavoriteViewModel(
-                    MyFavorite(
-                            FavoriteRepository(
-                                RoomFavoriteDataSource(
-                                        FavoriteDatabase.getInstance(requireContext())
-                                )
-                            ),
-                            eventRepository
-                    ),
-                    GetEvents(eventRepository)
-            )
-        }
 
         binding.favoritesRecycler.adapter = favoriteAdapter
 

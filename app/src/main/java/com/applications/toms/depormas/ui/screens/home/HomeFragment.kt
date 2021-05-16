@@ -19,18 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applications.toms.depormas.R
 import com.applications.toms.depormas.data.AndroidPermissionChecker
 import com.applications.toms.depormas.data.PlayServicesLocationDataSource
-import com.applications.toms.depormas.data.database.local.RoomEventDataSource
-import com.applications.toms.depormas.data.database.local.RoomFavoriteDataSource
 import com.applications.toms.depormas.domain.Sport
-import com.applications.toms.depormas.data.repository.SportRepository
-import com.applications.toms.depormas.data.database.remote.SportFirestoreServer
-import com.applications.toms.depormas.data.database.local.RoomSportDataSource
-import com.applications.toms.depormas.data.database.local.event.EventDatabase
-import com.applications.toms.depormas.data.database.local.favorite.FavoriteDatabase
-import com.applications.toms.depormas.data.database.local.sport.SportDatabase
-import com.applications.toms.depormas.data.database.remote.EventFirestoreServer
-import com.applications.toms.depormas.data.repository.EventRepository
-import com.applications.toms.depormas.data.repository.FavoriteRepository
 import com.applications.toms.depormas.data.repository.LocationRepository
 import com.applications.toms.depormas.databinding.FragmentHomeBinding
 import com.applications.toms.depormas.domain.Event
@@ -41,16 +30,15 @@ import com.applications.toms.depormas.ui.adapters.SportAdapter
 import com.applications.toms.depormas.ui.adapters.SportListener
 import com.applications.toms.depormas.usecases.*
 import com.applications.toms.depormas.utils.dateStringComparator
-import com.applications.toms.depormas.utils.getViewModel
 import com.applications.toms.depormas.utils.snackBar
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@ExperimentalCoroutinesApi
-class HomeFragment : Fragment() {
+class HomeFragment : ScopeFragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var myLocation: Map<String, Double>
     private val getMyLocation by lazy {
@@ -120,7 +108,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -134,8 +121,6 @@ class HomeFragment : Fragment() {
         if (!preferences.permissionToLocation) {
             coarseLocationPermissionRequester.launch(ACCESS_COARSE_LOCATION)
         }
-
-        homeViewModel = getViewModel(::buildViewModel)
 
         binding.homeViewModel = homeViewModel
 
@@ -170,37 +155,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun buildViewModel(): HomeViewModel {
-
-        val eventRepository = EventRepository(
-                lifecycleScope,
-                RoomEventDataSource(EventDatabase.getInstance(requireContext())),
-                EventFirestoreServer()
-        )
-
-        val favoriteRepository = FavoriteRepository(
-                RoomFavoriteDataSource(
-                        FavoriteDatabase.getInstance(requireContext())
-                )
-        )
-
-        val getSport = GetSports(
-                SportRepository(
-                        lifecycleScope,
-                        RoomSportDataSource(SportDatabase.getInstance(requireContext())),
-                        SportFirestoreServer()
-                )
-        )
-
-        val getEvents = GetEvents(eventRepository)
-
-        val saveFavorite = SaveFavorite(favoriteRepository,eventRepository)
-
-        val getFavorite = IsFavorite(favoriteRepository)
-
-        return getViewModel { HomeViewModel(getSport, getEvents, getFavorite, saveFavorite) }
-    }
-
     private fun getMyLocation() {
         lifecycleScope.launchWhenStarted {
             homeViewModel.updateRegion(getMyLocation.getRegion())
@@ -218,7 +172,7 @@ class HomeFragment : Fragment() {
             binding.eventsGroup.visibility = View.GONE
         } else {
             eventAdapter.submitList(events.sortedWith(dateStringComparator))
-            binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), events.size);
+            binding.dashboardCount.text = String.format(getString(R.string.dashboard_count_events), events.size)
             binding.emptyStateGroup.visibility = View.GONE
             binding.eventsGroup.visibility = View.VISIBLE
         }

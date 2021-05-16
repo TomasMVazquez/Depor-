@@ -6,9 +6,9 @@ import com.applications.toms.depormas.domain.Sport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class SportRepository(
-        private val coroutineScope: CoroutineScope,
         private val localDataSource: LocalSportDataSource,
         private val remoteDataSource: RemoteSportDataSource
 ) {
@@ -25,7 +25,7 @@ class SportRepository(
             }
             val list: MutableList<Sport>? = value?.toObjects(Sport::class.java)
             list?.toList()?.let { listToSave ->
-                coroutineScope.launch {
+                runBlocking {
                     localDataSource.saveSports(listToSave)
                 }
             }

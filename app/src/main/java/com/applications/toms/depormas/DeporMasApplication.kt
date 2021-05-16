@@ -11,6 +11,7 @@ class DeporMasApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initDI()
         instance = this
         preferences = SharedPreferences(applicationContext)
     }
