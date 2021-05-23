@@ -2,10 +2,11 @@ package com.applications.toms.depormas.data.repository
 
 import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.data.source.favorite.LocalFavoriteDataSource
+import kotlinx.coroutines.flow.Flow
 
 class FavoriteRepository(private val localFavoriteDataSource: LocalFavoriteDataSource) {
 
-    fun getFavoriteList() = localFavoriteDataSource.getAllFavorite()
+    fun getFavoriteList(): Flow<List<Favorite>> = localFavoriteDataSource.getAllFavorite()
 
     fun saveNewFavorite(favorite: Favorite) = localFavoriteDataSource.saveFavorite(favorite)
 

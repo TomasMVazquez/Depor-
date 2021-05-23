@@ -36,10 +36,10 @@ class LocationRepository(
     }
 
     companion object{
-        private val DEFAULT_LOCATION = mapOf(
+        val DEFAULT_LOCATION = mapOf(
                 "latitude" to 0.0,
                 "longitude" to 0.0
         )
-        private const val DEFAULT_REGION = ""
+        const val DEFAULT_REGION = ""
     }
 }

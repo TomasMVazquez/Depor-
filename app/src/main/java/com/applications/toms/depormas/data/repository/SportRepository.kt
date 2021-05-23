@@ -19,16 +19,8 @@ class SportRepository(
     }
 
     private fun refreshSports(){
-        remoteDataSource.getSportsCollection().addSnapshotListener { value, error ->
-            if (error != null) {
-                return@addSnapshotListener
-            }
-            val list: MutableList<Sport>? = value?.toObjects(Sport::class.java)
-            list?.toList()?.let { listToSave ->
-                runBlocking {
-                    localDataSource.saveSports(listToSave)
-                }
-            }
+        runBlocking {
+            localDataSource.saveSports(remoteDataSource.getSportList())
         }
     }
 }

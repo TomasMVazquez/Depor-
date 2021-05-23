@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 class EventFirestoreServer: RemoteEventDataSource {
 
     private val networkDatabase = Firebase.firestore
-    private val collection = networkDatabase.collection(collectionName)
+    private val collection = networkDatabase.collection(EVENTS)
 
     override fun updateEvent(event: Event) {
         collection
@@ -39,7 +39,7 @@ class EventFirestoreServer: RemoteEventDataSource {
     }
 
     companion object {
-        private const val collectionName = "events"
+        private const val EVENTS = "events"
     }
 
 }
