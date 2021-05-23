@@ -4,6 +4,8 @@ import com.applications.toms.depormas.data.database.local.favorite.Favorite
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.domain.Location
 import com.applications.toms.depormas.domain.Sport
+import com.google.firebase.firestore.FirebaseFirestore
+import org.mockito.Mockito
 
 internal val mockSport = Sport(
     id = 0,
@@ -30,3 +32,5 @@ internal val mockFavorite = Favorite(
     id = 1,
     eventId = "0"
 )
+
+internal val mockFirestore = Mockito.mock(FirebaseFirestore::class.java)

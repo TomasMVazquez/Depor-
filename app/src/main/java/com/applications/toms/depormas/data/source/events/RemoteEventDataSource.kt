@@ -4,5 +4,8 @@ import com.applications.toms.depormas.domain.Event
 import com.google.firebase.firestore.CollectionReference
 
 interface RemoteEventDataSource {
-    fun getEventsCollection(): CollectionReference
+    fun updateEvent(event: Event)
+    fun getEventDocumentId(): String
+    fun getEventList(): List<Event>
+    fun saveEvent(event: Event)
 }

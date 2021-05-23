@@ -21,42 +21,29 @@ class EventRepository(
 
     private fun refreshEvents(){
         remoteDataSource.getEventsCollection().addSnapshotListener { value, error ->
-            if (error != null) {
-                return@addSnapshotListener
-            }
-            val list: MutableList<Event>? = value?.toObjects(Event::class.java)
-            list?.toList()?.let { listToSave ->
-               runBlocking {
-                    localDataSource.saveEvents(listToSave)
-                }
-            }
+        runBlocking {
+            localDataSource.saveEvents(remoteDataSource.getEventList())
         }
     }
 
     fun saveEvent(event: Event): String{
-        val id = remoteDataSource.getEventsCollection().document().id
-        remoteDataSource.getEventsCollection().document(id).set(
-                Event(
-                        id = id,
-                        event_name = event.event_name,
-                        date = event.date,
-                        time = event.time,
-                        sport = event.sport,
-                        max_players = event.max_players,
-                        location = event.location,
-                        created_date = event.created_date
-                )
-        ).addOnCompleteListener { task ->
-            if (task.isSuccessful) refreshEvents()
-        }
+        val id = remoteDataSource.getEventDocumentId()
+        val newEvent = Event(
+            id = id,
+            event_name = event.event_name,
+            date = event.date,
+            time = event.time,
+            sport = event.sport,
+            max_players = event.max_players,
+            location = event.location,
+            created_date = event.created_date
+        )
+        remoteDataSource.saveEvent(newEvent)
         return id
     }
 
     fun updateEvent(event: Event){
-        remoteDataSource.getEventsCollection().document(event.id)
-                .set(event, SetOptions.merge()).addOnCompleteListener { task ->
-                    if (task.isSuccessful) refreshEvents()
-                }
+        remoteDataSource.updateEvent(event)
     }
 
 }
