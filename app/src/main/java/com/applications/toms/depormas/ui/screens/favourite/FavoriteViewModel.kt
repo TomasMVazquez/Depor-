@@ -9,6 +9,8 @@ import com.applications.toms.depormas.usecases.GetEvents
 import com.applications.toms.depormas.usecases.MyFavorite
 import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
+import com.applications.toms.depormas.utils.ScopedViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -18,10 +20,14 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
         private val myFavorite: MyFavorite,
-        private  val getEvents: GetEvents
-): ViewModel(), Scope by Scope.ImplementJob() {
+        private  val getEvents: GetEvents,
+        override val uiDispatcher: CoroutineDispatcher
+): ScopedViewModel(uiDispatcher) {
 
     val events = getEvents.invoke()
+        .flowOn(Dispatchers.IO)
+        .catch { emit(emptyList()) }
+
     val favorites = myFavorite.getFavorites()
             .flowOn(Dispatchers.IO).catch { emit(emptyList()) }
             .combine(events){list, events ->
@@ -66,6 +72,5 @@ class FavoriteViewModel(
             ))
         }
     }
-
 
 }

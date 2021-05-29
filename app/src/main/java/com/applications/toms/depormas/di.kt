@@ -29,6 +29,8 @@ import com.applications.toms.depormas.ui.screens.favourite.FavouriteFragment
 import com.applications.toms.depormas.ui.screens.home.HomeFragment
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel
 import com.applications.toms.depormas.usecases.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -59,6 +61,8 @@ private val appModule = module {
 
     factory<LocationDataSource> { PlayServicesLocationDataSource(get()) }
     factory<PermissionChecker> { AndroidPermissionChecker(get()) }
+
+    single<CoroutineDispatcher> { Dispatchers.Main }
 }
 
 private val dataModule = module {
@@ -70,7 +74,7 @@ private val dataModule = module {
 
 private val scopesModule = module {
     scope(named<HomeFragment>()) {
-        viewModel { HomeViewModel(get(),get(),get(),get()) }
+        viewModel { HomeViewModel(get(),get(),get(),get(),get()) }
         scoped { GetSports(get()) }
         scoped { GetEvents(get()) }
         scoped { IsFavorite(get()) }
@@ -78,13 +82,13 @@ private val scopesModule = module {
     }
 
     scope(named<FavouriteFragment>()) {
-        viewModel { FavoriteViewModel(get(),get()) }
+        viewModel { FavoriteViewModel(get(),get(),get()) }
         scoped { MyFavorite(get(),get()) }
         scoped { GetEvents(get()) }
     }
 
     scope(named<CreateEventFragment>()){
-        viewModel { CreateViewModel(get(),get()) }
+        viewModel { CreateViewModel(get(),get(),get()) }
         scoped { GetSports(get()) }
         scoped { SaveEvent(get(),get()) }
     }

@@ -9,6 +9,8 @@ import com.applications.toms.depormas.usecases.*
 import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
+import com.applications.toms.depormas.utils.ScopedViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
@@ -16,8 +18,9 @@ class HomeViewModel(
         private val getSports: GetSports,
         private val getEvents: GetEvents,
         private val isFavorites: IsFavorite,
-        private val saveFavorite: SaveFavorite
-        ): ViewModel(), Scope by ImplementJob() {
+        private val saveFavorite: SaveFavorite,
+        uiDispatcher: CoroutineDispatcher
+): ScopedViewModel(uiDispatcher) {
 
     private val _selectedSport = MutableStateFlow(sportsAll)
     val selectedSport: StateFlow<Sport> get() = _selectedSport
@@ -25,10 +28,14 @@ class HomeViewModel(
     private val _region = MutableStateFlow("")
     val region: StateFlow<String> get() = _region
 
-    val sports = getSports.invoke().asLiveData()
+    val sports = getSports.invoke()
+        .flowOn(Dispatchers.IO)
+        .catch { emit(emptyList()) }
+        .asLiveData()
 
     val events = getEvents.invoke()
-            .flowOn(Dispatchers.IO).catch { emit(emptyList()) }
+            .flowOn(Dispatchers.IO)
+            .catch { emit(emptyList()) }
             .combine(region){ list, region -> list.filter { event ->
                 if(region.isEmpty())
                     true

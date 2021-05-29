@@ -12,12 +12,24 @@ import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
+import com.applications.toms.depormas.utils.ScopedViewModel
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-class CreateViewModel(private val getSports: GetSports, private val saveEvent: SaveEvent): ViewModel(), Scope by Scope.ImplementJob(){
+class CreateViewModel(
+    private val getSports: GetSports,
+    private val saveEvent: SaveEvent,
+    override val uiDispatcher: CoroutineDispatcher
+    ): ScopedViewModel(uiDispatcher){
 
-    val sports = getSports.invoke().asLiveData()
+    val sports = getSports.invoke()
+        .flowOn(Dispatchers.IO)
+        .catch { emit(emptyList()) }
+        .asLiveData()
 
     private val _eventLocation = MutableLiveData<Location>()
     private val _eventSport = MutableLiveData<Sport>()
