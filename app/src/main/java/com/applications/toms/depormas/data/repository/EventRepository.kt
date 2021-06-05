@@ -20,7 +20,7 @@ class EventRepository(
     }
 
     private fun refreshEvents(){
-        remoteDataSource.getEventsCollection().addSnapshotListener { value, error ->
+        //TODO Es Correcto un run blocking?
         runBlocking {
             localDataSource.saveEvents(remoteDataSource.getEventList())
         }
