@@ -65,7 +65,7 @@ private val appModule = module {
     single<CoroutineDispatcher> { Dispatchers.Main }
 }
 
-private val dataModule = module {
+val dataModule = module {
     factory { EventRepository(get(),get()) }
     factory { FavoriteRepository(get()) }
     factory { SportRepository(get(),get()) }

@@ -1,12 +1,11 @@
-package com.applications.toms.depormas.viewmodel.create
+package com.applications.toms.depormas.ui.create
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.applications.toms.depormas.domain.Location
+import com.applications.toms.depormas.CoroutinesTestRule
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.mockSport
 import com.applications.toms.depormas.ui.screens.create.CreateViewModel
-import com.applications.toms.depormas.ui.screens.favourite.FavoriteViewModel
 import com.applications.toms.depormas.usecases.GetSports
 import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.EventWrapper
@@ -16,9 +15,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -31,6 +28,9 @@ class CreateViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val coroutinesTestRule = CoroutinesTestRule()
+
     @Mock
     lateinit var getSports: GetSports
 
@@ -39,34 +39,28 @@ class CreateViewModelTest {
 
     private lateinit var viewModel: CreateViewModel
 
+    private val sports = listOf(mockSport.copy(id = 0),mockSport.copy(id = 1),mockSport.copy(id = 2))
+
     @Before
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
-        viewModel = CreateViewModel(getSports,saveEvent,Dispatchers.Unconfined)
-    }
+        whenever(getSports.invoke()).thenReturn(flowOf(sports))
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
+        viewModel = CreateViewModel(getSports,saveEvent,Dispatchers.Unconfined)
     }
 
     @Test
     fun `validate getSports is called`() {
-        runBlocking {
-            val sports = listOf(mockSport.copy(id = 0))
-            val sportsFlow = flowOf(sports)
-            whenever(getSports.invoke()).thenReturn(sportsFlow)
-
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<List<Sport>>>()
             viewModel.sports.observeForever(observer)
 
-            verify(observer).onChanged(viewModel.sports.value)
+            verify(observer).onChanged(sports)
         }
     }
 
     @Test
     fun `validate observer on cancel button is clicked`() {
-        runBlocking {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<EventWrapper<Boolean>>>()
             viewModel.cancel.observeForever(observer)
 
@@ -79,7 +73,7 @@ class CreateViewModelTest {
 
     @Test
     fun `validate observer on create button is clicked`() {
-        runBlocking {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<EventWrapper<Boolean>>>()
             viewModel.createEvent.observeForever(observer)
 
@@ -92,7 +86,7 @@ class CreateViewModelTest {
 
     @Test
     fun `validation of Event created`() {
-        runBlocking {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<EventWrapper<Int>>>()
             viewModel.createValidation.observeForever(observer)
 
@@ -106,8 +100,5 @@ class CreateViewModelTest {
             verify(observer).onChanged(viewModel.createValidation.value)
             Assert.assertEquals(null,viewModel.createEvent.value?.peekContent())
         }
-        /**
-         * Como testear los livedata privados?
-         */
     }
 }

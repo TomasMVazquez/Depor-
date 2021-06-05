@@ -1,10 +1,11 @@
-package com.applications.toms.depormas.viewmodel.home
+package com.applications.toms.depormas.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.applications.toms.depormas.domain.Sport
 import com.applications.toms.depormas.mockSport
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
+import com.applications.toms.depormas.CoroutinesTestRule
 import com.applications.toms.depormas.domain.Event
 import com.applications.toms.depormas.mockEvent
 import com.applications.toms.depormas.ui.screens.home.HomeViewModel
@@ -20,9 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -34,6 +33,9 @@ class HomeViewModelTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val coroutinesTestRule = CoroutinesTestRule()
 
     @Mock
     lateinit var getSports: GetSports
@@ -49,63 +51,41 @@ class HomeViewModelTest {
 
     private lateinit var viewModel: HomeViewModel
 
+    private val sports = listOf(mockSport.copy(id = 0),mockSport.copy(id = 1),mockSport.copy(id = 2))
+    private val events = listOf(mockEvent.copy(id = "01"),mockEvent.copy(id = "01"))
+
     @Before
     fun setUp(){
-        /**
-            Al saltar error:
-                Module with the Main dispatcher had failed to initialize. For tests Dispatchers.setMain from kotlinx-coroutines-test module can be used
-            Se agrego --> testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
-            y el setMain y resetMain para evitarlo
-         */
+        whenever(getSports.invoke()).thenReturn(flowOf(sports))
+        whenever(getEvents.invoke()).thenReturn(flowOf(events))
 
-        Dispatchers.setMain(Dispatchers.Unconfined)
         viewModel = HomeViewModel(getSports,getEvents,isFavorite,saveFavorite,Dispatchers.Unconfined)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
     fun `validate getSports is called`() {
-        runBlocking {
-            val sports = listOf(mockSport.copy(id = 0))
-            val sportsFlow = flowOf(sports)
-            whenever(getSports.invoke()).thenReturn(sportsFlow)
-
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<List<Sport>>>()
             viewModel.sports.observeForever(observer)
 
-            verify(observer).onChanged(viewModel.sports.value)
-            /**
-                En realidad no es correcta esta validacion ya que esta vacia
-                si cambiamos viewmodel.sports.value por sports --> error
-             */
+            verify(observer).onChanged(sports)
         }
     }
 
     @Test
     fun `validate getEvents is called`() {
-        runBlocking {
-            val events = listOf(mockEvent.copy(id = "0"))
-            val eventsFlow = flowOf(events)
-            whenever(getEvents.invoke()).thenReturn(eventsFlow)
-
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<List<Event>>>()
             viewModel.events.observeForever(observer)
 
             verify(observer).onChanged(events)
-            /**
-             * Tira error pero... ???
-             */
         }
     }
 
     @Test
     fun `when a sport is selected, the sport is checked`() {
-        runBlocking {
-            val sport = mockSport.copy(id = 1)
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            val sport = sports[0]
             var selectedSport = viewModel.selectedSport.first()
 
             Assert.assertNotEquals(selectedSport,sport)
@@ -123,10 +103,10 @@ class HomeViewModelTest {
 
     @Test
     fun `when a sport is selected, the sport is checked 2`() {
-        runBlocking {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val observer = mock<Observer<Sport>>()
             viewModel.selectedSport.asLiveData().observeForever(observer)
-            val sport = mockSport.copy(id = 1)
+            val sport = sports[0]
 
             viewModel.onSelectSport(sport)
 
@@ -136,7 +116,7 @@ class HomeViewModelTest {
 
     @Test
     fun `when a region is provided, the region is updated`() {
-        runBlocking {
+        coroutinesTestRule.testDispatcher.runBlockingTest {
             val region = "ES"
             val observer = mock<Observer<String>>()
 
@@ -150,8 +130,8 @@ class HomeViewModelTest {
 
     @Test
     fun `on swipe event, add it to my favorites`() {
-        runBlocking {
-            val event = mockEvent.copy(id = "myEvent")
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            val event = events[0]
             whenever(isFavorite.invoke(event.id)).thenReturn(false)
 
             val observer = mock<Observer<EventWrapper<Int>>>()
@@ -165,8 +145,8 @@ class HomeViewModelTest {
 
     @Test
     fun `on swipe event, already added`() {
-        runBlocking {
-            val event = mockEvent.copy(id = "myEvent")
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            val event = events[0]
             whenever(isFavorite.invoke(event.id)).thenReturn(true)
 
             val observer = mock<Observer<EventWrapper<Int>>>()
