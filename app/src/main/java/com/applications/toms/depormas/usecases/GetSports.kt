@@ -5,5 +5,5 @@ import com.applications.toms.depormas.domain.Sport
 import kotlinx.coroutines.flow.Flow
 
 class GetSports(private val sportRepository: SportRepository) {
-    fun invoke(): Flow<List<Sport>> = sportRepository.getSports()
+    suspend fun invoke(): Flow<List<Sport>> = sportRepository.getSports()
 }
