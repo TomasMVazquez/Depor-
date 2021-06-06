@@ -19,8 +19,7 @@ class EventRepository(
         return localDataSource.getAllEvent()
     }
 
-    private fun refreshEvents(){
-        //TODO Es Correcto un run blocking?
+    private fun refreshEvents() {
         runBlocking {
             localDataSource.saveEvents(remoteDataSource.getEventList())
         }
@@ -45,5 +44,4 @@ class EventRepository(
     fun updateEvent(event: Event){
         remoteDataSource.updateEvent(event)
     }
-
 }
