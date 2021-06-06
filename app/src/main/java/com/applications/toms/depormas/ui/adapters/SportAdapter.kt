@@ -28,7 +28,7 @@ class SportAdapter(private val clickListener: SportListener):
             val res = itemView.context
             binding.clickListener = clickListener
             binding.sport = item
-            binding.sportTitle.text = item.name?.replace("_","\n")
+            binding.sportTitle.text = item.name.replace("_","\n")
             binding.sportImg.setImageResource(item.getDrawableInt(res))
             binding.executePendingBindings()
         }

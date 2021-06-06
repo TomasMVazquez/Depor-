@@ -1,5 +1,6 @@
 package com.applications.toms.depormas.data.repository
 
+import android.util.Log
 import com.applications.toms.depormas.data.source.LocationDataSource
 import com.applications.toms.depormas.data.source.PermissionChecker
 import com.applications.toms.depormas.data.source.PermissionChecker.*
@@ -12,16 +13,26 @@ class LocationRepository(
     suspend fun findLastLocation(): Map<String,Double> {
         return when {
             permissionChecker.check(Permission.FINE_LOCATION) -> {
-                mapOf(
+                try {
+                    mapOf(
                         "latitude" to locationDataSource.findMyCurrentLocation().latitude,
                         "longitude" to locationDataSource.findMyCurrentLocation().longitude
-                )
+                    )
+                }catch (t: Throwable){
+                    Log.d("Tomas", "findLastLocation: ${t.message}")
+                    DEFAULT_LOCATION
+                }
             }
             permissionChecker.check(Permission.COARSE_LOCATION) -> {
-                mapOf(
+                try {
+                    mapOf(
                         "latitude" to locationDataSource.findLastLocation().latitude,
                         "longitude" to locationDataSource.findLastLocation().longitude
-                )
+                    )
+                }catch (t: Throwable){
+                    Log.d("Tomas", "findLastLocation: ${t.message}")
+                    DEFAULT_LOCATION
+                }
             }
             else -> DEFAULT_LOCATION
         }

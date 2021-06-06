@@ -13,11 +13,14 @@ import com.applications.toms.depormas.usecases.SaveEvent
 import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CreateViewModel(private val getSports: GetSports, private val saveEvent: SaveEvent): ViewModel(), Scope by Scope.ImplementJob(){
 
-    val sports = getSports.invoke().asLiveData()
+    private val _sports= MutableLiveData<List<Sport>>()
+    val sports: LiveData<List<Sport>> get() = _sports
+
 
     private val _eventLocation = MutableLiveData<Location>()
     private val _eventSport = MutableLiveData<Sport>()
@@ -33,6 +36,11 @@ class CreateViewModel(private val getSports: GetSports, private val saveEvent: S
 
     init {
         initScope()
+        launch {
+            getSports.invoke().collect{
+                _sports.value = it
+            }
+        }
     }
 
     override fun onCleared() {

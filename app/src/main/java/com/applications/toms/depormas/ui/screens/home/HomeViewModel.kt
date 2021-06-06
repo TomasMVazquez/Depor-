@@ -11,6 +11,7 @@ import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.Scope.ImplementJob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
         private val getSports: GetSports,
@@ -25,7 +26,8 @@ class HomeViewModel(
     private val _region = MutableStateFlow("")
     val region: StateFlow<String> get() = _region
 
-    val sports = getSports.invoke().asLiveData()
+    private val _sports= MutableLiveData<List<Sport>>()
+    val sports: LiveData<List<Sport>> get() = _sports
 
     val events = getEvents.invoke()
             .flowOn(Dispatchers.IO).catch { emit(emptyList()) }
@@ -43,6 +45,11 @@ class HomeViewModel(
 
     init {
         initScope()
+        launch {
+            getSports.invoke().collect{
+                _sports.value = it
+            }
+        }
     }
 
     fun updateRegion(region: String?) {
