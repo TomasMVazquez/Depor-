@@ -36,7 +36,8 @@ class SportRepositoryTest {
             val sports = listOf(mockSport.copy(id = 0))
             val flowSports = flowOf(sports)
 
-            whenever(remoteSportDataSource.getSportList()).thenReturn(sports)
+            whenever(localSportDataSource.isEmpty()).thenReturn(true)
+            whenever(remoteSportDataSource.getSportsCollection()).thenReturn(flowSports)
             whenever(localSportDataSource.getAllSports()).thenReturn(flowSports)
 
             val result = sportRepository.getSports()

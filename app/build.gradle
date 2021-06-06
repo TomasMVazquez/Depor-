@@ -89,11 +89,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'com.google.android.libraries.places:places:2.4.0'
     //KOIN
-    def koin_version = "3.0.1"
+    def koin_version = "3.0.2"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-android-ext:$koin_version"
     implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
-    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+    implementation "io.insert-koin:koin-androidx-compose:3.0.1"
     implementation "io.insert-koin:koin-ktor:$koin_version"
     implementation "io.insert-koin:koin-logger-slf4j:$koin_version"
 
@@ -105,7 +105,7 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
     //Mockito
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-    testImplementation "org.mockito:mockito-inline:2.28.2"
+    testImplementation "org.mockito:mockito-inline:3.11.0"
     //ViewModel Test
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     //KoinTest
