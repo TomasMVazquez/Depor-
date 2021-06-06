@@ -43,7 +43,9 @@ class CreateViewModelTest {
 
     @Before
     fun setUp() {
-        whenever(getSports.invoke()).thenReturn(flowOf(sports))
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            whenever(getSports.invoke()).thenReturn(flowOf(sports))
+        }
 
         viewModel = CreateViewModel(getSports,saveEvent,Dispatchers.Unconfined)
     }

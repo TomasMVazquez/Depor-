@@ -74,7 +74,7 @@ class FakePlayServicesLocationDataSource(context: Context): LocationDataSource {
 class FakeSportFirestoreServer: RemoteSportDataSource {
     var sports = defaultFakeSports
 
-    override fun getSportList(): List<Sport> = sports
+    override fun getSportsCollection(): Flow<List<Sport>> = flowOf(sports)
 }
 
 class FakeEventFirestoreServer: RemoteEventDataSource {

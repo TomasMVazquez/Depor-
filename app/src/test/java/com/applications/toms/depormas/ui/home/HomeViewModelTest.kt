@@ -56,7 +56,9 @@ class HomeViewModelTest {
 
     @Before
     fun setUp(){
-        whenever(getSports.invoke()).thenReturn(flowOf(sports))
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            whenever(getSports.invoke()).thenReturn(flowOf(sports))
+        }
         whenever(getEvents.invoke()).thenReturn(flowOf(events))
 
         viewModel = HomeViewModel(getSports,getEvents,isFavorite,saveFavorite,Dispatchers.Unconfined)
