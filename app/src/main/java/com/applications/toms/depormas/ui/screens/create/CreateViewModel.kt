@@ -14,10 +14,7 @@ import com.applications.toms.depormas.utils.EventWrapper
 import com.applications.toms.depormas.utils.Scope
 import com.applications.toms.depormas.utils.ScopedViewModel
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CreateViewModel(
@@ -26,10 +23,9 @@ class CreateViewModel(
     override val uiDispatcher: CoroutineDispatcher
     ): ScopedViewModel(uiDispatcher){
 
-    val sports = getSports.invoke()
-        .flowOn(Dispatchers.IO)
-        .catch { emit(emptyList()) }
-        .asLiveData()
+    private val _sports= MutableLiveData<List<Sport>>()
+    val sports: LiveData<List<Sport>> get() = _sports
+
 
     private val _eventLocation = MutableLiveData<Location>()
     private val _eventSport = MutableLiveData<Sport>()
@@ -45,6 +41,11 @@ class CreateViewModel(
 
     init {
         initScope()
+        launch {
+            getSports.invoke().collect{
+                _sports.value = it
+            }
+        }
     }
 
     override fun onCleared() {

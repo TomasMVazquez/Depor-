@@ -1,8 +1,8 @@
 package com.applications.toms.depormas.data.source.sports
 
 import com.applications.toms.depormas.domain.Sport
-import com.google.firebase.firestore.CollectionReference
+import kotlinx.coroutines.flow.Flow
 
 interface RemoteSportDataSource {
-    fun getSportList(): List<Sport>
+    fun getSportsCollection(): Flow<List<Sport>>
 }
